@@ -3,14 +3,17 @@ public final class Vote<VotingOption: Voteable> {
     private let preferences: [VotingOption]
     
     init(preferences: [VotingOption]) throws {
+        
+        // TODO Move last in swift 2.2
         self.preferences = preferences
         
-        guard !self.preferences.isEmpty else {
+        // Check that there is at least one preference
+        guard !preferences.isEmpty else {
             throw VoteError.NoPreferencesInVote
         }
         
-        //Check that no option is preferred more than once
-        guard Set(self.preferences).count == self.preferences.count else {
+        // Check that no option is preferred more than once
+        guard Set(preferences).count == preferences.count else {
             throw VoteError.OptionPreferredMoreThanOnceInVote
         }
     }

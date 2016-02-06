@@ -79,8 +79,7 @@ internal final class VoteCountingRound<VotingOption: Voteable> {
         
         // Sort options by popularity (from least popular to most popular), so that they can
         // be eliminated one by one. The most popular (last) option can/should not be eliminated
-        var votesRemaining = ArraySlice(voteCount.sort({ $0.1.count < $1.1.count }))
-        votesRemaining.removeLast()
+        var votesRemaining = voteCount.sort({ $0.1.count < $1.1.count }).dropLast()
         
         // Continue looping until we find he most popular (last) option that individually has a 
         // higher number of votes than all options after it.
