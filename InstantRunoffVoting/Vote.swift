@@ -47,9 +47,9 @@ public final class VoteGenerator<VotingOption: Voteable>: AnyGenerator<VotingOpt
 }
 
 extension VoteGenerator: CustomStringConvertible {
+    
     public var description: String {
-        get {
-            return self.vote.preferences.map{ $0.description }.joinWithSeparator(">")
-        }
+        return self.vote.preferences.map{ $0.description }.joinWithSeparator(">")
     }
+    
 }

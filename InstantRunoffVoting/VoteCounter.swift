@@ -29,13 +29,19 @@ public final class VoteCounter<Option: Voteable> {
         
     }
     
-    /// Prints the results in a nicely formatted way
-    func printResults() {
+}
+
+extension VoteCounter: CustomStringConvertible {
+    
+    public var description: String {
         
-        print("Number of votes in uncounted ballot: " + voteCountingRounds[0].totalVotes.description)
+        var desc: String = ""
+        
+        
+        desc += ("Number of votes in uncounted ballot: " + voteCountingRounds[0].totalVotes.description + "\n")
         
         for (round, voteCountingRound) in voteCountingRounds.enumerate() {
-            print("\nRound " + round.description)
+            desc += "\nRound " + round.description + "\n"
             
             if round > 0 {
                 
@@ -44,36 +50,36 @@ public final class VoteCounter<Option: Voteable> {
                 let thisRoundOption = Set(voteCountingRound.allOptions)
                 let optionsToEliminate = lastRoundOptions.subtract(thisRoundOption)
                 
-                print(optionsToEliminate.count.description + " option(s) were eliminated in the same round")
+                desc += optionsToEliminate.count.description + " option(s) were eliminated in the same round\n"
                 
                 for optionToEliminate in optionsToEliminate {
-                    print("Option to eliminate: " + optionToEliminate.description)
+                    desc += "Option to eliminate: " + optionToEliminate.description + "\n"
                     for voteToRedistribute in voteCountingRounds[round - 1].votesFor(optionToEliminate) {
-                        print(" - Resorting vote: " + voteToRedistribute.description)
+                        desc += " - Resorting vote: " + voteToRedistribute.description + "\n"
                     }
                 }
             }
             
-            print("Number of valid votes in this round: " + voteCountingRound.totalVotes.description)
+            desc += "Number of valid votes in this round: " + voteCountingRound.totalVotes.description + "\n"
             
-            print("Current count: ", terminator: "")
+            desc += "Current count: "
             for (option, vote) in voteCountingRound {
-                print(option.description + ": " + vote.count.description + ", ", terminator: "")
+                desc += option.description + ": " + vote.count.description + ", "
             }
-            print("")
+            desc += "\n"
             
-            print("Current distribution:")
+            desc += "Current distribution:\n"
             for (option, vote) in voteCountingRound {
-                print(" - " + option.description + ": " + vote.description
-                )
+                desc += " - " + option.description + ": " + vote.description + "\n"
             }
             
             if let winner = voteCountingRound.optionWithMajority() {
-                print("Found winner:" + winner.description + "\n")
-                return
+                desc += "Found winner:" + winner.description + "\n\n"
+            } else {
+                desc += "No winner found in this round, moving on to next\n\n"
             }
-            print("No winner found in this round, moving on to next")
         }
+        return desc
     }
     
 }

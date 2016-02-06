@@ -50,7 +50,7 @@ class InstantRunnoffVotingUnitTests: XCTestCase {
         
         let voteCounter = try! VoteCounter(ballot: votes)
         
-        voteCounter.printResults()
+        print(voteCounter)
         
         XCTAssertEqual(voteCounter.winner, TestOptions.AltA)
         
@@ -81,7 +81,7 @@ class InstantRunnoffVotingUnitTests: XCTestCase {
         
         let voteCounter = try! VoteCounter(ballot: votes)
         
-        voteCounter.printResults()
+        print(voteCounter)
         XCTAssertEqual(voteCounter.winner, TestOptions.AltA)
         
         let results = voteCounter.results
@@ -122,7 +122,7 @@ class InstantRunnoffVotingUnitTests: XCTestCase {
         
         let voteCounter = try! VoteCounter(ballot: votes)
         
-        voteCounter.printResults()
+        print(voteCounter)
         XCTAssertEqual(voteCounter.winner, TestOptions.AltA)
         
         let results = voteCounter.results
@@ -170,7 +170,7 @@ class InstantRunnoffVotingUnitTests: XCTestCase {
         
         let voteCounter = try! VoteCounter(ballot: votes)
         
-        voteCounter.printResults()
+        print(voteCounter)
         XCTAssertEqual(voteCounter.winner, "Alt A")
         
         let results = voteCounter.results
@@ -210,7 +210,7 @@ class InstantRunnoffVotingUnitTests: XCTestCase {
         
         let voteCounter = try! VoteCounter(ballot: votes)
         
-        voteCounter.printResults()
+        print(voteCounter)
         XCTAssertEqual(voteCounter.winner, TestOptions.AltA)
         
         let results = voteCounter.results
@@ -255,7 +255,7 @@ class InstantRunnoffVotingUnitTests: XCTestCase {
         
         let voteCounter = try! VoteCounter(ballot: votes)
         
-        voteCounter.printResults()
+        print(voteCounter)
         XCTAssertEqual(voteCounter.winner, TestOptions.AltD)
         
         let results = voteCounter.results
