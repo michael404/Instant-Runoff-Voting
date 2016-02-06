@@ -1,17 +1,17 @@
-public final class VoteCounter<VotingOption: Voteable> {
+public final class VoteCounter<Option: Voteable> {
     
-    private var voteCountingRounds: [VoteCountingRound<VotingOption>]
+    private var voteCountingRounds: [VoteCountingRound<Option>]
     private var round = 0
-    var winner: VotingOption!
+    var winner: Option!
     
     /// An array of dictionaries indicating the number of votes for the options
     /// in all the rounds
-    var results: [[VotingOption: Int]] {
+    var results: [[Option: Int]] {
         return self.voteCountingRounds.map({ $0.results })
     }
     
     /// Initialize and do the counting
-    init(ballot: [Vote<VotingOption>]) throws {
+    init(ballot: [Vote<Option>]) throws {
                 
         // Set up first round
         voteCountingRounds = [VoteCountingRound(fromUncountedBallot: ballot)]

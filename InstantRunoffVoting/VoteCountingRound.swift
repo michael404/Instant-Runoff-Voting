@@ -1,17 +1,19 @@
-internal final class VoteCountingRound<VotingOption: Voteable> {
+internal final class VoteCountingRound<Option: Voteable> {
     
-    private var voteCount: [VotingOption: [VoteGenerator<VotingOption>]]
+    typealias Votes = [VoteGenerator<Option>]
+    
+    private var voteCount: [Option: Votes]
     
     var totalVotes: Int {
         return voteCount.reduce(0, combine: { $0 + $1.1.count })
     }
     
-    var allOptions: [VotingOption] {
+    var allOptions: [Option] {
         return Array(voteCount.keys)
     }
     
-    var results: [VotingOption: Int] {
-        var tempResults: [VotingOption: Int] = [:]
+    var results: [Option: Int] {
+        var tempResults: [Option: Int] = [:]
         for (option, votes) in voteCount {
             tempResults[option] = votes.count
         }
@@ -20,7 +22,7 @@ internal final class VoteCountingRound<VotingOption: Voteable> {
     
     /// Initialize from an uncounted ballot.
     /// All options will be added to the vote count, since no votes are eliminated
-    init(fromUncountedBallot ballot: [Vote<VotingOption>]) {
+    init(fromUncountedBallot ballot: [Vote<Option>]) {
         
         voteCount = [:]
         for vote in ballot.map({ $0.generate() }) {
@@ -38,7 +40,7 @@ internal final class VoteCountingRound<VotingOption: Voteable> {
     
     /// Initialize from a previous round.
     /// This will include trying to eliminate options
-    init(setUpNextRoundFromPreviousRound round: VoteCountingRound<VotingOption>) throws {
+    init(setUpNextRoundFromPreviousRound round: VoteCountingRound<Option>) throws {
         
         self.voteCount = round.voteCount
         let votesToRedistribute = self.eliminateOptionsAndGetVotesToRedistribute()
@@ -54,7 +56,7 @@ internal final class VoteCountingRound<VotingOption: Voteable> {
     /// Checks if there is an option that has more than 50% of the votes and returns that
     /// option or nil if it does not exist
     @warn_unused_result
-    func optionWithMajority() -> VotingOption? {
+    func optionWithMajority() -> Option? {
         for option in voteCount {
             if option.1.count > self.totalVotes / 2 {
                 return option.0
@@ -63,7 +65,7 @@ internal final class VoteCountingRound<VotingOption: Voteable> {
         return nil
     }
     
-    func votesFor(option: VotingOption) -> [VoteGenerator<VotingOption>] {
+    func votesFor(option: Option) -> Votes {
         if let votes = voteCount[option] {
             return votes
         }
@@ -75,7 +77,7 @@ internal final class VoteCountingRound<VotingOption: Voteable> {
     /// The algorithm is aggressive, and eliminates all options that together have
     /// less votes than the last option not to be eliminated.
     @warn_unused_result
-    private func eliminateOptionsAndGetVotesToRedistribute() -> [VoteGenerator<VotingOption>] {
+    private func eliminateOptionsAndGetVotesToRedistribute() -> Votes {
         
         // Sort options by popularity (from least popular to most popular), so that they can
         // be eliminated one by one. The most popular (last) option can/should not be eliminated
@@ -96,7 +98,7 @@ internal final class VoteCountingRound<VotingOption: Voteable> {
     }
     
     /// Redistribute the votes to the next voting option that is stil valid
-    private func redistributeVotes(votes: [VoteGenerator<VotingOption>]) {
+    private func redistributeVotes(votes: Votes) {
         for vote in votes {
             while let preference = vote.next() {
                 // Only add votes to options that are still valid in this round
@@ -111,7 +113,7 @@ internal final class VoteCountingRound<VotingOption: Voteable> {
 
 extension VoteCountingRound: SequenceType {
     
-    internal typealias Generator = DictionaryGenerator<VotingOption, [VoteGenerator<VotingOption>]>
+    internal typealias Generator = DictionaryGenerator<Option, Votes>
     
     internal func generate() -> VoteCountingRound.Generator {
         return voteCount.generate()

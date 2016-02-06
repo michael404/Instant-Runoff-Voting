@@ -10,7 +10,7 @@ extension String: Voteable {
 
 class InstantRunnoffVotingUnitTests: XCTestCase {
     
-    enum TestVotingOptions: String, Voteable {
+    enum TestOptions: String, Voteable {
         case AltA = "A"
         case AltB = "B"
         case AltC = "C"
@@ -36,7 +36,7 @@ class InstantRunnoffVotingUnitTests: XCTestCase {
     }
     
     func testOneRoundVote() {
-        var votes: [Vote<TestVotingOptions>] = []
+        var votes: [Vote<TestOptions>] = []
         do {
             votes.append(try Vote(preferences: [.AltA, .AltB, .AltC]))
             votes.append(try Vote(preferences: [.AltA, .AltB, .AltC]))
@@ -52,7 +52,7 @@ class InstantRunnoffVotingUnitTests: XCTestCase {
         
         voteCounter.printResults()
         
-        XCTAssertEqual(voteCounter.winner, TestVotingOptions.AltA)
+        XCTAssertEqual(voteCounter.winner, TestOptions.AltA)
         
         let results = voteCounter.results
         
@@ -64,7 +64,7 @@ class InstantRunnoffVotingUnitTests: XCTestCase {
     }
     
     func testTwoRoundVote() {
-        var votes: [Vote<TestVotingOptions>] = []
+        var votes: [Vote<TestOptions>] = []
         
         do {
             votes.append(try Vote(preferences: [.AltA]))
@@ -82,7 +82,7 @@ class InstantRunnoffVotingUnitTests: XCTestCase {
         let voteCounter = try! VoteCounter(ballot: votes)
         
         voteCounter.printResults()
-        XCTAssertEqual(voteCounter.winner, TestVotingOptions.AltA)
+        XCTAssertEqual(voteCounter.winner, TestOptions.AltA)
         
         let results = voteCounter.results
         
@@ -99,7 +99,7 @@ class InstantRunnoffVotingUnitTests: XCTestCase {
     }
     
     func testFourRoundVote() {
-        var votes: [Vote<TestVotingOptions>] = []
+        var votes: [Vote<TestOptions>] = []
         
         do {
             for _ in 1...7 {
@@ -123,7 +123,7 @@ class InstantRunnoffVotingUnitTests: XCTestCase {
         let voteCounter = try! VoteCounter(ballot: votes)
         
         voteCounter.printResults()
-        XCTAssertEqual(voteCounter.winner, TestVotingOptions.AltA)
+        XCTAssertEqual(voteCounter.winner, TestOptions.AltA)
         
         let results = voteCounter.results
         
@@ -188,7 +188,7 @@ class InstantRunnoffVotingUnitTests: XCTestCase {
     }
     
     func testTwoWayResolvableTie() {
-        var votes: [Vote<TestVotingOptions>] = []
+        var votes: [Vote<TestOptions>] = []
         
         do {
             votes.append(try Vote(preferences: [.AltA, .AltC]))
@@ -211,7 +211,7 @@ class InstantRunnoffVotingUnitTests: XCTestCase {
         let voteCounter = try! VoteCounter(ballot: votes)
         
         voteCounter.printResults()
-        XCTAssertEqual(voteCounter.winner, TestVotingOptions.AltA)
+        XCTAssertEqual(voteCounter.winner, TestOptions.AltA)
         
         let results = voteCounter.results
         
@@ -230,7 +230,7 @@ class InstantRunnoffVotingUnitTests: XCTestCase {
     }
     
     func testThreeWayResolvableTie() {
-        var votes: [Vote<TestVotingOptions>] = []
+        var votes: [Vote<TestOptions>] = []
         
         do {
             votes.append(try Vote(preferences: [.AltA]))
@@ -256,7 +256,7 @@ class InstantRunnoffVotingUnitTests: XCTestCase {
         let voteCounter = try! VoteCounter(ballot: votes)
         
         voteCounter.printResults()
-        XCTAssertEqual(voteCounter.winner, TestVotingOptions.AltD)
+        XCTAssertEqual(voteCounter.winner, TestOptions.AltD)
         
         let results = voteCounter.results
         
@@ -277,7 +277,7 @@ class InstantRunnoffVotingUnitTests: XCTestCase {
     }
     
     func testTwoWayUnresolvableTie() {
-        var votes: [Vote<TestVotingOptions>] = []
+        var votes: [Vote<TestOptions>] = []
         
         do {
             votes.append(try Vote(preferences: [.AltA, .AltC]))
@@ -309,7 +309,7 @@ class InstantRunnoffVotingUnitTests: XCTestCase {
     }
     
     func testFourWayUnresolvableTie() {
-        var votes: [Vote<TestVotingOptions>] = []
+        var votes: [Vote<TestOptions>] = []
         
         do {
             votes.append(try Vote(preferences: [.AltA, .AltC]))
@@ -339,10 +339,10 @@ class InstantRunnoffVotingUnitTests: XCTestCase {
         // Testing this in two steps. (1) try? to make sure that this fails, and
         // Then a do/try/catch clause to make sure it returns the correct error
         
-        XCTAssertNil(try? Vote(preferences: Array<TestVotingOptions>()))
+        XCTAssertNil(try? Vote(preferences: Array<TestOptions>()))
         
         do {
-            let _ = try Vote(preferences: Array<TestVotingOptions>())
+            let _ = try Vote(preferences: Array<TestOptions>())
         } catch let e as VoteError {
             XCTAssertEqual(e, VoteError.NoPreferencesInVote)
         } catch {
@@ -356,11 +356,11 @@ class InstantRunnoffVotingUnitTests: XCTestCase {
         // Testing this in two steps. (1) try? to make sure that this fails, and
         // Then a do/try/catch clause to make sure it returns the correct error
         
-        XCTAssertNil(try? Vote(preferences: [TestVotingOptions.AltB, .AltB]))
+        XCTAssertNil(try? Vote(preferences: [TestOptions.AltB, .AltB]))
 
         do {
             let _ =
-            try Vote(preferences: [TestVotingOptions.AltB, .AltB])
+            try Vote(preferences: [TestOptions.AltB, .AltB])
         } catch let e as VoteError {
             XCTAssertEqual(e, VoteError.OptionPreferredMoreThanOnceInVote)
         } catch {

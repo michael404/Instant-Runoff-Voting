@@ -13,7 +13,7 @@ extension Int: Voteable {
 
 class InstantRunnoffVotingPerformanceTest: XCTestCase {
     
-    enum TestVotingOptions: String, Voteable {
+    enum TestOptions: String, Voteable {
         case AltA = "A"
         case AltB = "B"
         case AltC = "C"
@@ -30,7 +30,7 @@ class InstantRunnoffVotingPerformanceTest: XCTestCase {
     
     func testPerformanceOfFourRoundVote() {
         
-        var votes: [Vote<TestVotingOptions>] = []
+        var votes: [Vote<TestOptions>] = []
         
         let performanceFactor = 200
         
@@ -85,7 +85,7 @@ class InstantRunnoffVotingPerformanceTest: XCTestCase {
     
     func testPerformanceOfVoteValidation() {
         
-        var votes: [Vote<TestVotingOptions>] = []
+        var votes: [Vote<TestOptions>] = []
         
         let performanceFactor = 800
         
