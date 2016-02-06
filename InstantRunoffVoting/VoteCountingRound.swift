@@ -1,6 +1,6 @@
 internal final class VoteCountingRound<Option: Voteable> {
     
-    typealias Votes = [VoteGenerator<Option>]
+    internal typealias Votes = [VoteGenerator<Option>]
     
     private var voteCount: [Option: Votes]
     
@@ -56,7 +56,7 @@ internal final class VoteCountingRound<Option: Voteable> {
     /// Checks if there is an option that has more than 50% of the votes and returns that
     /// option or nil if it does not exist
     @warn_unused_result
-    func optionWithMajority() -> Option? {
+    internal func optionWithMajority() -> Option? {
         for option in voteCount {
             if option.1.count > self.totalVotes / 2 {
                 return option.0
@@ -65,7 +65,7 @@ internal final class VoteCountingRound<Option: Voteable> {
         return nil
     }
     
-    func votesFor(option: Option) -> Votes {
+    internal func votesFor(option: Option) -> Votes {
         if let votes = voteCount[option] {
             return votes
         }

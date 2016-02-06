@@ -1,8 +1,11 @@
 public final class VoteCounter<Option: Voteable> {
     
     private var voteCountingRounds: [VoteCountingRound<Option>]
+    
     private var round = 0
-    var winner: Option!
+    
+    /// The winning option of the vote
+    private(set) var winner: Option!
     
     /// An array of dictionaries indicating the number of votes for the options
     /// in all the rounds
@@ -22,7 +25,7 @@ public final class VoteCounter<Option: Voteable> {
             // Check if there is a winner and return the winner
             if let winner = voteCountingRounds[round].optionWithMajority() {
                 self.winner = winner
-                break
+                return
             }
             
             // If no winner is found, set up next round as a copy of the current,
