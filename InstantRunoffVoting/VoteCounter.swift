@@ -2,9 +2,8 @@ public final class VoteCounter<Option: Voteable> {
     
     private var voteCountingRounds: [VoteCountingRound<Option>]
     
-    private var round = 0
-    
     /// The winning option of the vote
+    // TODO: In Swift 2.2, remove the force-unwrapping
     private(set) var winner: Option!
     
     /// An array of dictionaries indicating the number of votes for the options
@@ -19,20 +18,15 @@ public final class VoteCounter<Option: Voteable> {
         // Set up first round
         voteCountingRounds = [VoteCountingRound(fromUncountedBallot: ballot)]
         
-        // Start looping though elimination rounds until one option has won
-        while true {
+        // As long as no option has majority, keep adding more elimination rounds
+        while let voteCountingRound = voteCountingRounds.last where voteCountingRound.optionWithMajority() == nil {
             
-            // Check if there is a winner and return the winner
-            if let winner = voteCountingRounds[round].optionWithMajority() {
-                self.winner = winner
-                return
-            }
-            
-            // If no winner is found, set up next round as a copy of the current,
-            // find the options to eliminate, and redistribute votes
-            try voteCountingRounds.append(VoteCountingRound(setUpNextRoundFromPreviousRound: voteCountingRounds[round]))
-            round += 1
+            // If no winner is found, set up next round based on the current
+            voteCountingRounds.append(try VoteCountingRound(setUpNextRoundFromPreviousRound: voteCountingRound))
         }
+        
+        self.winner = voteCountingRounds.last!.optionWithMajority()!
+        
     }
     
     /// Prints the results in a nicely formatted way
