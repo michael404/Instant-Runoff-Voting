@@ -37,7 +37,6 @@ extension VoteCounter: CustomStringConvertible {
         
         var desc: String = ""
         
-        
         desc += ("Number of votes in uncounted ballot: " + voteCountingRounds[0].totalVotes.description + "\n")
         
         for (round, voteCountingRound) in voteCountingRounds.enumerate() {
@@ -79,7 +78,7 @@ extension VoteCounter: CustomStringConvertible {
                 desc += "No winner found in this round, moving on to next\n\n"
             }
         }
+        
         return desc
     }
-    
 }

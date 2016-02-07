@@ -65,6 +65,7 @@ internal final class VoteCountingRound<Option: Voteable> {
         return nil
     }
     
+    @warn_unused_result
     internal func votesFor(option: Option) -> Votes {
         if let votes = voteCount[option] {
             return votes
@@ -86,6 +87,7 @@ internal final class VoteCountingRound<Option: Voteable> {
         // Continue looping until we find he most popular (last) option that individually has a 
         // higher number of votes than all options after it.
         while votesRemaining.removeLast().1.count <= votesRemaining.reduce(0, combine: { $0 + $1.1.count }) {
+            continue
         }
         
         // We have found that vote, and can therefore every option
