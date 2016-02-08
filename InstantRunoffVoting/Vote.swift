@@ -1,11 +1,8 @@
-public final class Vote<VotingOption: Voteable> {
+public final class Vote<Option: Voteable> {
     
-    private let preferences: [VotingOption]
+    private let preferences: [Option]
     
-    init(preferences: [VotingOption]) throws {
-        
-        // TODO Move last in swift 2.2
-        self.preferences = preferences
+    init(preferences: [Option]) throws {        
         
         // Check that there is at least one preference
         guard !preferences.isEmpty else {
@@ -16,31 +13,32 @@ public final class Vote<VotingOption: Voteable> {
         guard Set(preferences).count == preferences.count else {
             throw VoteError.OptionPreferredMoreThanOnceInVote
         }
+        
+        self.preferences = preferences
     }
     
-}
-
-extension Vote: SequenceType {
+    // TODO: This used SequenceType before, but since Swift 2.2 this
+    // does not seem to work
     
-    public typealias Generator = VoteGenerator<VotingOption>
-    
-    public func generate() -> Vote.Generator {
-        return VoteGenerator<VotingOption>(vote: self)
+    /// Returns a VoteGenerator that keeps a copy of the vote
+    /// and maintains iteration state
+    public func generate() -> VoteGenerator<Option> {
+        return VoteGenerator<Option>(vote: self)
     }
+
 }
 
-public final class VoteGenerator<VotingOption: Voteable>: AnyGenerator<VotingOption> {
+public final class VoteGenerator<Option: Voteable>: GeneratorType {
 
-    private let vote: Vote<VotingOption>
-    private var preferenceGenerator: IndexingGenerator<[VotingOption]>
+    private let vote: Vote<Option>
+    private var preferenceGenerator: IndexingGenerator<[Option]>
     
-    init(vote: Vote<VotingOption>) {
+    init(vote: Vote<Option>) {
         self.vote = vote
         preferenceGenerator = self.vote.preferences.generate()
-        super.init()
     }
     
-    override public func next() -> VotingOption? {
+    public func next() -> Option? {
         return self.preferenceGenerator.next()
     }
     

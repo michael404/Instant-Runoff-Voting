@@ -3,8 +3,7 @@ public final class VoteCounter<Option: Voteable> {
     private var voteCountingRounds: [VoteCountingRound<Option>]
     
     /// The winning option of the vote
-    // TODO: In Swift 2.2, remove the force-unwrapping, and change to "public let"
-    private(set) var winner: Option!
+    let winner: Option
     
     /// An array of dictionaries indicating the number of votes for the options
     /// in all the rounds
