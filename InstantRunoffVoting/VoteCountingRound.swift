@@ -13,11 +13,11 @@ internal final class VoteCountingRound<Option: Voteable> {
     }
     
     var results: [Option: Int] {
-        var tempResults: [Option: Int] = [:]
+        var results: [Option: Int] = [:]
         for (option, votes) in voteCount {
-            tempResults[option] = votes.count
+            results[option] = votes.count
         }
-        return tempResults
+        return results
     }
     
     /// Initialize from an uncounted ballot.
