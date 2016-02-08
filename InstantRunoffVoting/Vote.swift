@@ -28,7 +28,7 @@ public final class Vote<Option: Voteable> {
 
 }
 
-public final class VoteGenerator<Option: Voteable>: GeneratorType {
+public final class VoteGenerator<Option: Voteable> {
 
     private let vote: Vote<Option>
     private var preferenceGenerator: IndexingGenerator<[Option]>
