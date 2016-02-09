@@ -22,9 +22,7 @@ class InstantRunnoffVotingPerformanceTest: XCTestCase {
         case AltF = "F"
         
         var description: String {
-            get {
-                return self.rawValue
-            }
+            return self.rawValue
         }
     }
     

@@ -2,9 +2,7 @@ import XCTest
 
 extension String: Votable {
     public var description: String {
-        get {
-            return self
-        }
+        return self
     }
 }
 
@@ -19,9 +17,7 @@ class InstantRunnoffVotingUnitTests: XCTestCase {
         case AltF = "F"
         
         var description: String {
-            get {
-                return self.rawValue
-            }
+            return self.rawValue
         }
     }
     
