@@ -17,9 +17,6 @@ public final class Vote<Option: Voteable> {
         self.preferences = preferences
     }
     
-    // TODO: This used SequenceType before, but since Swift 2.2 this
-    // does not seem to work
-    
     /// Returns a VoteGenerator that keeps a copy of the vote
     /// and maintains iteration state
     public func generate() -> VoteGenerator<Option> {
@@ -31,19 +28,19 @@ public final class Vote<Option: Voteable> {
 extension Vote: CustomStringConvertible {
     
     public var description: String {
-        return self.preferences.map{ $0.description }.joinWithSeparator(">")
+        return self.preferences.map({ $0.description }).joinWithSeparator(">")
     }
     
 }
 
 public final class VoteGenerator<Option: Voteable> {
 
-    private let vote: Vote<Option>
     private var preferenceGenerator: IndexingGenerator<[Option]>
+    private let _description: String
     
     init(vote: Vote<Option>) {
-        self.vote = vote
-        preferenceGenerator = self.vote.preferences.generate()
+        self.preferenceGenerator = vote.preferences.generate()
+        self._description = vote.description
     }
     
     public func next() -> Option? {
@@ -55,7 +52,7 @@ public final class VoteGenerator<Option: Voteable> {
 extension VoteGenerator: CustomStringConvertible {
     
     public var description: String {
-        return self.vote.description
+        return self._description
     }
     
 }
