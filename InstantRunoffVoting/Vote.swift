@@ -28,6 +28,14 @@ public final class Vote<Option: Voteable> {
 
 }
 
+extension Vote: CustomStringConvertible {
+    
+    public var description: String {
+        return self.preferences.map{ $0.description }.joinWithSeparator(">")
+    }
+    
+}
+
 public final class VoteGenerator<Option: Voteable> {
 
     private let vote: Vote<Option>
@@ -47,7 +55,7 @@ public final class VoteGenerator<Option: Voteable> {
 extension VoteGenerator: CustomStringConvertible {
     
     public var description: String {
-        return self.vote.preferences.map{ $0.description }.joinWithSeparator(">")
+        return self.vote.description
     }
     
 }
