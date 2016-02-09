@@ -1,4 +1,4 @@
-internal final class VoteCountingRound<Option: Voteable> {
+internal final class VoteCountingRound<Option: Votable> {
     
     internal typealias Votes = [VoteGenerator<Option>]
     

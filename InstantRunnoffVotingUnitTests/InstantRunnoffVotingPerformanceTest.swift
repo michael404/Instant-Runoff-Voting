@@ -8,12 +8,12 @@
 
 import XCTest
 
-extension Int: Voteable {
+extension Int: Votable {
 }
 
 class InstantRunnoffVotingPerformanceTest: XCTestCase {
     
-    enum TestOptions: String, Voteable {
+    enum TestOptions: String, Votable {
         case AltA = "A"
         case AltB = "B"
         case AltC = "C"

@@ -1,6 +1,6 @@
 import XCTest
 
-extension String: Voteable {
+extension String: Votable {
     public var description: String {
         get {
             return self
@@ -10,7 +10,7 @@ extension String: Voteable {
 
 class InstantRunnoffVotingUnitTests: XCTestCase {
     
-    enum TestOptions: String, Voteable {
+    enum TestOptions: String, Votable {
         case AltA = "A"
         case AltB = "B"
         case AltC = "C"

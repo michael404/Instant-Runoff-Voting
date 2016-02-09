@@ -1,4 +1,4 @@
-public final class Vote<Option: Voteable> {
+public final class Vote<Option: Votable> {
     
     private let preferences: [Option]
     
@@ -33,7 +33,7 @@ extension Vote: CustomStringConvertible {
     
 }
 
-public final class VoteGenerator<Option: Voteable> {
+public final class VoteGenerator<Option: Votable> {
 
     private var preferenceGenerator: IndexingGenerator<[Option]>
     private let _description: String
