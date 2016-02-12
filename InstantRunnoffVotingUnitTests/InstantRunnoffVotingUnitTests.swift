@@ -289,8 +289,8 @@ class InstantRunnoffVotingUnitTests: XCTestCase {
             XCTFail("Failed to create votes")
         }
         
-        // Testing this in two steps. (1) try? to make sure that this fails, and
-        // Then a do/try/catch clause to make sure it returns the correct error
+        // Testing this in two steps. First "try?" to make sure that this fails, and
+        // then a do/try/catch-clause to make sure it returns the correct error
         
         XCTAssertNil(try? VoteCounter(ballot: votes))
         
@@ -316,8 +316,8 @@ class InstantRunnoffVotingUnitTests: XCTestCase {
             XCTFail("Failed to create votes")
         }
         
-        // Testing this in two steps. (1) try? to make sure that this fails, and
-        // Then a do/try/catch clause to make sure it returns the correct error
+        // Testing this in two steps. First "try?" to make sure that this fails, and
+        // then a do/try/catch-clause to make sure it returns the correct error
         
         XCTAssertNil(try? VoteCounter(ballot: votes))
         
@@ -332,8 +332,8 @@ class InstantRunnoffVotingUnitTests: XCTestCase {
     
     func testVoteWithNoOptions() {
         
-        // Testing this in two steps. (1) try? to make sure that this fails, and
-        // Then a do/try/catch clause to make sure it returns the correct error
+        // Testing this in two steps. First "try?" to make sure that this fails, and
+        // then a do/try/catch-clause to make sure it returns the correct error
         
         XCTAssertNil(try? Vote(preferences: Array<TestOptions>()))
         
@@ -349,8 +349,8 @@ class InstantRunnoffVotingUnitTests: XCTestCase {
     
     func testVoteRepeatedOptions() {
         
-        // Testing this in two steps. (1) try? to make sure that this fails, and
-        // Then a do/try/catch clause to make sure it returns the correct error
+        // Testing this in two steps. First "try?" to make sure that this fails, and
+        // then a do/try/catch-clause to make sure it returns the correct error
         
         XCTAssertNil(try? Vote(preferences: [TestOptions.AltB, .AltB]))
 
