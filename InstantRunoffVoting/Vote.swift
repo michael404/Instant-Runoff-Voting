@@ -19,8 +19,8 @@ public final class Vote<Option: Votable> {
     
     /// Returns a VoteGenerator that keeps a copy of the vote
     /// and maintains iteration state
-    public func generate() -> VoteGenerator<Option> {
-        return VoteGenerator<Option>(vote: self)
+    public func generate() -> VotePreferenceIterator<Option> {
+        return VotePreferenceIterator<Option>(vote: self)
     }
 
 }
@@ -33,23 +33,23 @@ extension Vote: CustomStringConvertible {
     
 }
 
-public final class VoteGenerator<Option: Votable> {
+public final class VotePreferenceIterator<Option: Votable> {
 
-    private var preferenceGenerator: IndexingGenerator<[Option]>
+    private var iterator: IndexingGenerator<[Option]>
     private let _description: String
     
     init(vote: Vote<Option>) {
-        self.preferenceGenerator = vote.preferences.generate()
+        self.iterator = vote.preferences.generate()
         self._description = vote.description
     }
     
     public func next() -> Option? {
-        return self.preferenceGenerator.next()
+        return self.iterator.next()
     }
     
 }
 
-extension VoteGenerator: CustomStringConvertible {
+extension VotePreferenceIterator: CustomStringConvertible {
     
     public var description: String {
         return self._description

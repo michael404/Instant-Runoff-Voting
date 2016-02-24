@@ -1,6 +1,6 @@
 internal final class VoteCountingRound<Option: Votable> {
     
-    internal typealias Votes = [VoteGenerator<Option>]
+    internal typealias Votes = [VotePreferenceIterator<Option>]
     
     private var voteCount: [Option: Votes]
     
@@ -57,9 +57,9 @@ internal final class VoteCountingRound<Option: Votable> {
     /// option or nil if it does not exist
     @warn_unused_result
     internal func optionWithMajority() -> Option? {
-        for option in voteCount {
-            if option.1.count > self.totalVotes / 2 {
-                return option.0
+        for (option, votes) in voteCount {
+            if votes.count > (self.totalVotes / 2) {
+                return option
             }
         }
         return nil
