@@ -33,7 +33,7 @@ extension Vote: CustomStringConvertible {
     
 }
 
-public final class VotePreferenceIterator<Option: Votable> {
+public final class VotePreferenceIterator<Option: Votable>: GeneratorType {
 
     private var iterator: IndexingGenerator<[Option]>
     private let _description: String
