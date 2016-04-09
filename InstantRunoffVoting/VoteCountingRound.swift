@@ -58,10 +58,8 @@ internal final class VoteCountingRound<Option: Votable> {
     /// option or nil if it does not exist
     @warn_unused_result
     internal func optionWithMajority() -> Option? {
-        for (option, votes) in voteCount {
-            if votes.count > (self.totalVotes / 2) {
-                return option
-            }
+        for (option, votes) in voteCount where votes.count > (self.totalVotes / 2) {
+            return option
         }
         return nil
     }
