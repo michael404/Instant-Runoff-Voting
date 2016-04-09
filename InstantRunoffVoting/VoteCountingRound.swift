@@ -28,12 +28,13 @@ internal final class VoteCountingRound<Option: Votable> {
         for vote in ballot.map({ $0.generate() }) {
             if let preference = vote.next() {
                 
-                // Initialize array if is not allready initialized
-                if voteCount[preference] == nil {
-                    voteCount[preference] = []
+                // Add vote to array or initialize array if is not allready initialized
+                if var votesForPreference = voteCount[preference] {
+                    votesForPreference.append(vote)
+                    voteCount[preference] = votesForPreference
+                } else {
+                    voteCount[preference] = [vote]
                 }
-                
-                voteCount[preference]!.append(vote)
             }
         }
     }
@@ -104,8 +105,9 @@ internal final class VoteCountingRound<Option: Votable> {
         for vote in votes {
             while let preference = vote.next() {
                 // Only add votes to options that are still valid in this round
-                if voteCount[preference] != nil {
-                    voteCount[preference]!.append(vote)
+                if var votesForPreference = voteCount[preference] {
+                    votesForPreference.append(vote)
+                    voteCount[preference] = votesForPreference
                     break
                 }
             }
