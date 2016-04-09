@@ -58,10 +58,7 @@ internal final class VoteCountingRound<Option: Votable> {
     /// option or nil if it does not exist
     @warn_unused_result
     internal func optionWithMajority() -> Option? {
-        for (option, votes) in voteCount where votes.count > (self.totalVotes / 2) {
-            return option
-        }
-        return nil
+        return voteCount.lazy.filter({ $0.1.count > (self.totalVotes / 2) }).map({ $0.0 }).first
     }
     
     @warn_unused_result
