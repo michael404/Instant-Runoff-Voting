@@ -1,6 +1,12 @@
-public final class Vote<Option: Votable> {
+public struct Vote<Option: Votable> {
     
     private let preferences: [Option]
+    
+    private var index = 0
+    
+    public var activePreference: Option {
+        return preferences[index]
+    }
     
     init(preferences: [Option]) throws {        
         
@@ -17,42 +23,22 @@ public final class Vote<Option: Votable> {
         self.preferences = preferences
     }
     
-    /// Returns a VoteGenerator that keeps a copy of the vote
-    /// and maintains iteration state
-    public func generate() -> VotePreferenceIterator<Option> {
-        return VotePreferenceIterator<Option>(vote: self)
+    public func selfWithNextPreference() -> Vote? {
+        var voteCopy = self
+        voteCopy.index += 1
+        if index >= preferences.count {
+            return nil
+        } else {
+            return voteCopy
+        }
     }
-
+    
 }
 
 extension Vote: CustomStringConvertible {
     
     public var description: String {
         return self.preferences.map({ $0.description }).joinWithSeparator(">")
-    }
-    
-}
-
-public final class VotePreferenceIterator<Option: Votable>: GeneratorType {
-
-    private var iterator: IndexingGenerator<[Option]>
-    private let _description: String
-    
-    init(vote: Vote<Option>) {
-        self.iterator = vote.preferences.generate()
-        self._description = vote.description
-    }
-    
-    public func next() -> Option? {
-        return self.iterator.next()
-    }
-    
-}
-
-extension VotePreferenceIterator: CustomStringConvertible {
-    
-    public var description: String {
-        return self._description
     }
     
 }

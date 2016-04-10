@@ -1,8 +1,8 @@
 internal final class VoteCountingRound<Option: Votable> {
     
-    internal typealias Votes = [VotePreferenceIterator<Option>]
+    internal typealias Votes = [Vote<Option>]
     
-    private var voteCount: [Option: Votes]
+    private var voteCount: [Option: Votes] = [:]
     
     var totalVotes: Int {
         return voteCount.reduce(0, combine: { $0 + $1.1.count })
@@ -23,27 +23,17 @@ internal final class VoteCountingRound<Option: Votable> {
     /// Initialize from an uncounted ballot.
     /// All options will be added to the vote count, since no votes are eliminated
     init(fromUncountedBallot ballot: [Vote<Option>]) {
-        
-        voteCount = [:]
-        for vote in ballot.map({ $0.generate() }) {
-            if let preference = vote.next() {
-                
-                // Add vote to array or initialize array if is not allready initialized
-                if var votesForPreference = voteCount[preference] {
-                    votesForPreference.append(vote)
-                    voteCount[preference] = votesForPreference
-                } else {
-                    voteCount[preference] = [vote]
-                }
-            }
-        }
+        sortVotes(ballot: ballot)
+
     }
     
     /// Initialize from a previous round.
     /// This will include trying to eliminate options
     init(setUpNextRoundFromPreviousRound round: VoteCountingRound<Option>) throws {
         
-        self.voteCount = round.voteCount
+        let newBallot = round.voteCount.flatMap({ $0.1.map({ $0.selfWithNextPreference() }).filter({ $0 != nil }).map({ $0! }) })
+        sortVotes(ballot: newBallot)
+        
         let votesToRedistribute = self.eliminateOptionsAndGetVotesToRedistribute()
         
         // Check that we do not try to eliminate no options
@@ -52,6 +42,25 @@ internal final class VoteCountingRound<Option: Votable> {
         }
         
         self.redistributeVotes(votesToRedistribute)
+    }
+    
+    private func sortVotes(ballot ballot: Votes) {
+        
+        print("no of votes in ballot: " + ballot.count.description)
+        
+        for vote in ballot {
+            
+            print(vote)
+            print("active pref: " + vote.description)
+            
+            // Add vote to array or initialize array if is not allready initialized
+            if var votesForPreference = voteCount[vote.activePreference] {
+                votesForPreference.append(vote)
+                voteCount[vote.activePreference] = votesForPreference
+            } else {
+                voteCount[vote.activePreference] = [vote]
+            }
+        }
     }
     
     /// Checks if there is an option that has more than 50% of the votes and returns that
@@ -98,11 +107,11 @@ internal final class VoteCountingRound<Option: Votable> {
     /// Redistribute the votes to the next voting option that is stil valid
     private func redistributeVotes(votes: Votes) {
         for vote in votes {
-            while let preference = vote.next() {
+            while let voteWithNewPreference = vote.selfWithNextPreference() {
                 // Only add votes to options that are still valid in this round
-                if var votesForPreference = voteCount[preference] {
+                if var votesForPreference = voteCount[voteWithNewPreference.activePreference] {
                     votesForPreference.append(vote)
-                    voteCount[preference] = votesForPreference
+                    voteCount[voteWithNewPreference.activePreference] = votesForPreference
                     break
                 }
             }
