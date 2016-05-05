@@ -29,9 +29,8 @@ internal final class VoteCountingRound<Option: Votable> {
             // Discard votes that do not have any active preference
             if let activePreference = vote.activePreference {
                 // Add vote to array or initialize array if is not allready initialized
-                if var votesForPreference = voteCount[activePreference] {
-                    votesForPreference.append(vote)
-                    voteCount[activePreference] = votesForPreference
+                if let _ = voteCount[activePreference] {
+                    voteCount[activePreference]!.append(vote)
                 } else {
                     voteCount[activePreference] = [vote]
                 }
@@ -101,18 +100,16 @@ internal final class VoteCountingRound<Option: Votable> {
     private func redistributeVotes(votes: Votes) {
         
         for var vote in votes {
-            vote.advance()
             
             while let activePreference = vote.activePreference {
                 
+                vote.advance()
+                
                 // Only add votes to options that are still valid in this round
-                if var votesForPreference = voteCount[activePreference] {
-                    votesForPreference.append(vote)
-                    voteCount[activePreference] = votesForPreference
+                if let _ = voteCount[activePreference] {
+                    voteCount[activePreference]!.append(vote)
                     break
                 }
-                // Advance the vote if the preference is not available
-                vote.advance()
             }
         }
     }
