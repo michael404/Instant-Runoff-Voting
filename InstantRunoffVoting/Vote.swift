@@ -4,8 +4,11 @@ public struct Vote<Option: Votable> {
     
     private var index = 0
     
-    public var activePreference: Option {
-        return preferences[index]
+    public var activePreference: Option? {
+        if index < preferences.count {
+            return preferences[index]
+        }
+        return nil
     }
     
     init(preferences: [Option]) throws {        
@@ -23,14 +26,8 @@ public struct Vote<Option: Votable> {
         self.preferences = preferences
     }
     
-    public func selfWithNextPreference() -> Vote? {
-        var voteCopy = self
-        voteCopy.index += 1
-        if index >= preferences.count {
-            return nil
-        } else {
-            return voteCopy
-        }
+    public mutating func advance() {
+        index += 1
     }
     
 }

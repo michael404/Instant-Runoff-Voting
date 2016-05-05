@@ -23,16 +23,27 @@ internal final class VoteCountingRound<Option: Votable> {
     /// Initialize from an uncounted ballot.
     /// All options will be added to the vote count, since no votes are eliminated
     init(fromUncountedBallot ballot: [Vote<Option>]) {
-        sortVotes(ballot: ballot)
-
+        
+        for vote in ballot {
+            
+            // Discard votes that do not have any active preference
+            if let activePreference = vote.activePreference {
+                // Add vote to array or initialize array if is not allready initialized
+                if var votesForPreference = voteCount[activePreference] {
+                    votesForPreference.append(vote)
+                    voteCount[activePreference] = votesForPreference
+                } else {
+                    voteCount[activePreference] = [vote]
+                }
+            }
+        }
     }
     
     /// Initialize from a previous round.
     /// This will include trying to eliminate options
     init(setUpNextRoundFromPreviousRound round: VoteCountingRound<Option>) throws {
         
-        let newBallot = round.voteCount.flatMap({ $0.1.map({ $0.selfWithNextPreference() }).filter({ $0 != nil }).map({ $0! }) })
-        sortVotes(ballot: newBallot)
+        voteCount = round.voteCount
         
         let votesToRedistribute = self.eliminateOptionsAndGetVotesToRedistribute()
         
@@ -44,30 +55,12 @@ internal final class VoteCountingRound<Option: Votable> {
         self.redistributeVotes(votesToRedistribute)
     }
     
-    private func sortVotes(ballot ballot: Votes) {
-        
-        print("no of votes in ballot: " + ballot.count.description)
-        
-        for vote in ballot {
-            
-            print(vote)
-            print("active pref: " + vote.description)
-            
-            // Add vote to array or initialize array if is not allready initialized
-            if var votesForPreference = voteCount[vote.activePreference] {
-                votesForPreference.append(vote)
-                voteCount[vote.activePreference] = votesForPreference
-            } else {
-                voteCount[vote.activePreference] = [vote]
-            }
-        }
-    }
-    
     /// Checks if there is an option that has more than 50% of the votes and returns that
     /// option or nil if it does not exist
     @warn_unused_result
     internal func optionWithMajority() -> Option? {
-        return voteCount.lazy.filter({ $0.1.count > (self.totalVotes / 2) }).map({ $0.0 }).first
+        //TODO: Change to .find(where:) in Swift 3
+        return voteCount.filter({ $0.1.count > (self.totalVotes / 2) }).map({ $0.0 }).first
     }
     
     @warn_unused_result
@@ -100,20 +93,26 @@ internal final class VoteCountingRound<Option: Votable> {
         for optionToRemove in votesRemaining.map({ $0.0 }) {
             voteCount.removeValueForKey(optionToRemove)
         }
-        
+
         return votesRemaining.flatMap({ $0.1 })
     }
     
-    /// Redistribute the votes to the next voting option that is stil valid
+    /// Redistribute the votes to the next voting option that are stil valid
     private func redistributeVotes(votes: Votes) {
-        for vote in votes {
-            while let voteWithNewPreference = vote.selfWithNextPreference() {
+        
+        for var vote in votes {
+            vote.advance()
+            
+            while let activePreference = vote.activePreference {
+                
                 // Only add votes to options that are still valid in this round
-                if var votesForPreference = voteCount[voteWithNewPreference.activePreference] {
+                if var votesForPreference = voteCount[activePreference] {
                     votesForPreference.append(vote)
-                    voteCount[voteWithNewPreference.activePreference] = votesForPreference
+                    voteCount[activePreference] = votesForPreference
                     break
                 }
+                // Advance the vote if the preference is not available
+                vote.advance()
             }
         }
     }
