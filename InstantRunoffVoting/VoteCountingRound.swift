@@ -1,8 +1,8 @@
 internal final class VoteCountingRound<Option: Votable> {
     
-    internal typealias Votes = [VotePreferenceIterator<Option>]
+    internal typealias Votes = [Vote<Option>]
     
-    private var voteCount: [Option: Votes]
+    private var voteCount: [Option: Votes] = [:]
     
     var totalVotes: Int {
         return voteCount.reduce(0, combine: { $0 + $1.1.count })
@@ -24,16 +24,15 @@ internal final class VoteCountingRound<Option: Votable> {
     /// All options will be added to the vote count, since no votes are eliminated
     init(fromUncountedBallot ballot: [Vote<Option>]) {
         
-        voteCount = [:]
-        for vote in ballot.map({ $0.generate() }) {
-            if let preference = vote.next() {
-                
+        for var vote in ballot {
+            
+            // Discard votes that do not have any active preference
+            if let activePreference = vote.next() {
                 // Add vote to array or initialize array if is not allready initialized
-                if var votesForPreference = voteCount[preference] {
-                    votesForPreference.append(vote)
-                    voteCount[preference] = votesForPreference
+                if let _ = voteCount[activePreference] {
+                    voteCount[activePreference]!.append(vote)
                 } else {
-                    voteCount[preference] = [vote]
+                    voteCount[activePreference] = [vote]
                 }
             }
         }
@@ -43,7 +42,8 @@ internal final class VoteCountingRound<Option: Votable> {
     /// This will include trying to eliminate options
     init(setUpNextRoundFromPreviousRound round: VoteCountingRound<Option>) throws {
         
-        self.voteCount = round.voteCount
+        voteCount = round.voteCount
+        
         let votesToRedistribute = self.eliminateOptionsAndGetVotesToRedistribute()
         
         // Check that we do not try to eliminate no options
@@ -92,18 +92,20 @@ internal final class VoteCountingRound<Option: Votable> {
         for optionToRemove in votesRemaining.map({ $0.0 }) {
             voteCount.removeValueForKey(optionToRemove)
         }
-        
+
         return votesRemaining.flatMap({ $0.1 })
     }
     
-    /// Redistribute the votes to the next voting option that is stil valid
+    /// Redistribute the votes to the next voting option that are stil valid
     private func redistributeVotes(votes: Votes) {
-        for vote in votes {
-            while let preference = vote.next() {
+        
+        for var vote in votes {
+            
+            while let activePreference = vote.next() {
+                
                 // Only add votes to options that are still valid in this round
-                if var votesForPreference = voteCount[preference] {
-                    votesForPreference.append(vote)
-                    voteCount[preference] = votesForPreference
+                if let _ = voteCount[activePreference] {
+                    voteCount[activePreference]!.append(vote)
                     break
                 }
             }
