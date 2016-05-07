@@ -2,7 +2,7 @@ internal final class VoteCountingRound<Option: Votable> {
     
     internal typealias Votes = [Vote<Option>]
     
-    private var voteCount: [Option: Votes] = [:]
+    private var voteCount: [Option: Votes]
     
     var totalVotes: Int {
         return voteCount.reduce(0, combine: { $0 + $1.1.count })
@@ -29,6 +29,8 @@ internal final class VoteCountingRound<Option: Votable> {
     /// Initialize from an uncounted ballot.
     /// All options will be added to the vote count, since no votes are eliminated
     init(fromUncountedBallot ballot: [Vote<Option>]) {
+        
+        voteCount = [:]
         
         for var vote in ballot {
             
