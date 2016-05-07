@@ -2,13 +2,10 @@ public struct Vote<Option: Votable> {
     
     private let preferences: [Option]
     
-    private var index = 0
+    private var index: Int
     
     public var activePreference: Option? {
-        if index < preferences.count {
-            return preferences[index]
-        }
-        return nil
+        return preferences.indices.contains(index) ? preferences[index] : nil
     }
     
     init(preferences: [Option]) throws {        
@@ -24,10 +21,11 @@ public struct Vote<Option: Votable> {
         }
         
         self.preferences = preferences
+        self.index = self.preferences.startIndex
     }
     
-    public mutating func advance() {
-        index += 1
+    internal mutating func advance() {
+        index = index.successor()
     }
     
 }
