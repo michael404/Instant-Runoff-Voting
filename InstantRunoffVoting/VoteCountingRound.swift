@@ -51,6 +51,7 @@ internal struct VoteCountingRound<Option: Votable> {
     /// have less votes than the last option not to be eliminated.
     init(setUpNextRoundFromPreviousRound previousRound: VoteCountingRound<Option>) throws {
         
+        // Copy over the voteCount from the last round as a start
         self.voteCount = previousRound.voteCount
         
         // Sort options by popularity (from least popular to most popular), so that they can
@@ -63,7 +64,7 @@ internal struct VoteCountingRound<Option: Votable> {
             continue
         }
 
-        // We have found that vote, and can therefore every option
+        // We have found that vote, and can therefore remove every option
         // that is less popular than this vote
         for optionToRemove in votesRemaining.map({ $0.0 }) {
             voteCount.removeValueForKey(optionToRemove)
