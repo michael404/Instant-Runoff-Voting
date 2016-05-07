@@ -13,6 +13,12 @@ internal final class VoteCountingRound<Option: Votable> {
     }
     
     var results: [Option: Int] {
+        
+        // TODO: If this proposal gets included in Swift 3:
+        // https://github.com/apple/swift-evolution/pull/125
+        // ...this can be changed to:
+        // return Dictionary(voteCount.map({ $0, $1.count }))
+        
         var results: [Option: Int] = [:]
         for (option, votes) in voteCount {
             results[option] = votes.count
