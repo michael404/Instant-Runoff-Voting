@@ -1,4 +1,4 @@
-internal final class VoteCountingRound<Option: Votable> {
+internal struct VoteCountingRound<Option: Votable> {
     
     internal typealias Votes = [Vote<Option>]
     
@@ -46,20 +46,48 @@ internal final class VoteCountingRound<Option: Votable> {
         }
     }
     
-    /// Initialize from a previous round.
-    /// This will include trying to eliminate options
+    /// Initialize from a previous round. This will include trying to eliminate options.
+    /// The elemination algorithm is aggressive, and eliminates all options that together
+    /// have less votes than the last option not to be eliminated.
     init(setUpNextRoundFromPreviousRound round: VoteCountingRound<Option>) throws {
         
-        voteCount = round.voteCount
+        self.voteCount = round.voteCount
         
-        let votesToRedistribute = self.eliminateOptionsAndGetVotesToRedistribute()
+        // Sort options by popularity (from least popular to most popular), so that they can
+        // be eliminated one by one.
+        var votesRemaining = voteCount.sort({ $0.1.count < $1.1.count })
         
-        // Check that we do not try to eliminate no options
+        // Continue looping until we find he most popular (last) option that individually has a
+        // higher number of votes than all options after it.
+        while votesRemaining.removeLast().1.count <= votesRemaining.reduce(0, combine: { $0 + $1.1.count }) {
+            continue
+        }
+
+        // We have found that vote, and can therefore every option
+        // that is less popular than this vote
+        for optionToRemove in votesRemaining.map({ $0.0 }) {
+            voteCount.removeValueForKey(optionToRemove)
+        }
+        
+        let votesToRedistribute = votesRemaining.flatMap({ $0.1 })
+        
+        // Check that we eliminate at least one option
         guard !votesToRedistribute.isEmpty else {
             throw VoteError.UnresolvableTie
         }
+
+        // Redistribute the votes to the next voting option that are stil valid
+        for var vote in votesToRedistribute {
         
-        self.redistributeVotes(votesToRedistribute)
+            while let preference = vote.next() {
+                
+                // Only add votes to options that are still valid in this round
+                if let _ = voteCount[preference] {
+                    voteCount[preference]!.append(vote)
+                    break
+                }
+            }
+        }
     }
     
     /// Checks if there is an option that has more than 50% of the votes and returns that
@@ -78,47 +106,6 @@ internal final class VoteCountingRound<Option: Votable> {
         return []
     }
     
-    /// Removes the options that can be eliminated in this round and returns
-    /// the corresponding votes that can be redistributed.
-    /// The algorithm is aggressive, and eliminates all options that together have
-    /// less votes than the last option not to be eliminated.
-    @warn_unused_result
-    private func eliminateOptionsAndGetVotesToRedistribute() -> Votes {
-        
-        // Sort options by popularity (from least popular to most popular), so that they can
-        // be eliminated one by one. The most popular (last) option can/should not be eliminated
-        var votesRemaining = voteCount.sort({ $0.1.count < $1.1.count }).dropLast()
-        
-        // Continue looping until we find he most popular (last) option that individually has a 
-        // higher number of votes than all options after it.
-        while votesRemaining.removeLast().1.count <= votesRemaining.reduce(0, combine: { $0 + $1.1.count }) {
-            continue
-        }
-        
-        // We have found that vote, and can therefore every option
-        // that is less popular than this vote
-        for optionToRemove in votesRemaining.map({ $0.0 }) {
-            voteCount.removeValueForKey(optionToRemove)
-        }
-
-        return votesRemaining.flatMap({ $0.1 })
-    }
-    
-    /// Redistribute the votes to the next voting option that are stil valid
-    private func redistributeVotes(votes: Votes) {
-        
-        for var vote in votes {
-            
-            while let activePreference = vote.next() {
-                
-                // Only add votes to options that are still valid in this round
-                if let _ = voteCount[activePreference] {
-                    voteCount[activePreference]!.append(vote)
-                    break
-                }
-            }
-        }
-    }
 }
 
 extension VoteCountingRound: SequenceType {

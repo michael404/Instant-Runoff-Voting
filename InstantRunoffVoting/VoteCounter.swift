@@ -1,4 +1,4 @@
-public final class VoteCounter<Option: Votable> {
+public struct VoteCounter<Option: Votable> {
     
     private var voteCountingRounds: [VoteCountingRound<Option>]
     

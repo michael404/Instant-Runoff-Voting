@@ -14,6 +14,7 @@
 		4C197F811C25AD08001AE296 /* Votable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C197F7F1C25AD08001AE296 /* Votable.swift */; };
 		4C197F861C25B130001AE296 /* VoteCounter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C197F851C25B130001AE296 /* VoteCounter.swift */; };
 		4C197F871C25B130001AE296 /* VoteCounter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C197F851C25B130001AE296 /* VoteCounter.swift */; };
+		4C88D5161CDE4F9B00923ADC /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C88D5151CDE4F9B00923ADC /* main.swift */; };
 		4C98CE0D1C44432900089109 /* InstantRunnoffVotingPerformanceTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C98CE0C1C44432900089109 /* InstantRunnoffVotingPerformanceTest.swift */; };
 		4CB86C291C26C6F600289FBC /* Vote.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C197F5B1C25A4CF001AE296 /* Vote.swift */; };
 		4CB86C2A1C26C72800289FBC /* VoteError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C197F5F1C25A627001AE296 /* VoteError.swift */; };
@@ -41,6 +42,7 @@
 		4C197F761C25A9CC001AE296 /* InstantRunnoffVotingUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstantRunnoffVotingUnitTests.swift; sourceTree = "<group>"; };
 		4C197F7F1C25AD08001AE296 /* Votable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Votable.swift; sourceTree = "<group>"; };
 		4C197F851C25B130001AE296 /* VoteCounter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VoteCounter.swift; sourceTree = "<group>"; };
+		4C88D5151CDE4F9B00923ADC /* main.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		4C98CE0C1C44432900089109 /* InstantRunnoffVotingPerformanceTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InstantRunnoffVotingPerformanceTest.swift; sourceTree = "<group>"; };
 		4CD20A251C37F7550080F11F /* VoteCountingRound.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VoteCountingRound.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -66,6 +68,7 @@
 		4C197F481C25A4B6001AE296 = {
 			isa = PBXGroup;
 			children = (
+				4C88D5141CDE4F8C00923ADC /* Main */,
 				4C197F531C25A4B6001AE296 /* InstantRunoffVoting */,
 				4C197F751C25A9CC001AE296 /* InstantRunnoffVotingUnitTests */,
 				4C197F521C25A4B6001AE296 /* Products */,
@@ -101,6 +104,14 @@
 			);
 			path = InstantRunnoffVotingUnitTests;
 			sourceTree = SOURCE_ROOT;
+		};
+		4C88D5141CDE4F8C00923ADC /* Main */ = {
+			isa = PBXGroup;
+			children = (
+				4C88D5151CDE4F9B00923ADC /* main.swift */,
+			);
+			name = Main;
+			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
@@ -189,6 +200,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4C88D5161CDE4F9B00923ADC /* main.swift in Sources */,
 				4C197F801C25AD08001AE296 /* Votable.swift in Sources */,
 				4C197F5C1C25A4CF001AE296 /* Vote.swift in Sources */,
 				4C197F861C25B130001AE296 /* VoteCounter.swift in Sources */,
