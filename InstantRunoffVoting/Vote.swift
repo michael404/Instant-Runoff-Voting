@@ -20,6 +20,7 @@ public struct Vote<Option: Votable> {
         self.index = self.preferences.startIndex
     }
     
+    /// Advance to the next preference and return it, or nil if no next preference exists
     internal mutating func next() -> Option? {
         defer { index = index.successor() }
         return index < preferences.endIndex ? preferences[index] : nil
