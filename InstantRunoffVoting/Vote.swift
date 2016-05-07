@@ -4,10 +4,6 @@ public struct Vote<Option: Votable> {
     
     private var index: Int
     
-    public var activePreference: Option? {
-        return preferences.indices.contains(index) ? preferences[index] : nil
-    }
-    
     init(preferences: [Option]) throws {        
         
         // Check that there is at least one preference
@@ -24,8 +20,9 @@ public struct Vote<Option: Votable> {
         self.index = self.preferences.startIndex
     }
     
-    internal mutating func advance() {
-        index = index.successor()
+    internal mutating func next() -> Option? {
+        defer { index = index.successor() }
+        return preferences.indices.contains(index) ? preferences[index] : nil
     }
     
 }

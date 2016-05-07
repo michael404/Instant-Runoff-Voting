@@ -24,10 +24,10 @@ internal final class VoteCountingRound<Option: Votable> {
     /// All options will be added to the vote count, since no votes are eliminated
     init(fromUncountedBallot ballot: [Vote<Option>]) {
         
-        for vote in ballot {
+        for var vote in ballot {
             
             // Discard votes that do not have any active preference
-            if let activePreference = vote.activePreference {
+            if let activePreference = vote.next() {
                 // Add vote to array or initialize array if is not allready initialized
                 if let _ = voteCount[activePreference] {
                     voteCount[activePreference]!.append(vote)
@@ -101,9 +101,7 @@ internal final class VoteCountingRound<Option: Votable> {
         
         for var vote in votes {
             
-            while let activePreference = vote.activePreference {
-                
-                vote.advance()
+            while let activePreference = vote.next() {
                 
                 // Only add votes to options that are still valid in this round
                 if let _ = voteCount[activePreference] {
