@@ -49,9 +49,9 @@ internal struct VoteCountingRound<Option: Votable> {
     /// Initialize from a previous round. This will include trying to eliminate options.
     /// The elemination algorithm is aggressive, and eliminates all options that together
     /// have less votes than the last option not to be eliminated.
-    init(setUpNextRoundFromPreviousRound round: VoteCountingRound<Option>) throws {
+    init(setUpNextRoundFromPreviousRound previousRound: VoteCountingRound<Option>) throws {
         
-        self.voteCount = round.voteCount
+        self.voteCount = previousRound.voteCount
         
         // Sort options by popularity (from least popular to most popular), so that they can
         // be eliminated one by one.
