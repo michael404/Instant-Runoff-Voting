@@ -34,13 +34,13 @@ internal struct VoteCountingRound<Option: Votable> {
         
         for var vote in ballot {
             
-            // Discard votes that do not have any active preference
-            if let activePreference = vote.next() {
+            // Discard votes that do not have any preferences
+            if let preference = vote.next() {
                 // Add vote to array or initialize array if is not allready initialized
-                if let _ = voteCount[activePreference] {
-                    voteCount[activePreference]!.append(vote)
+                if let _ = voteCount[preference] {
+                    voteCount[preference]!.append(vote)
                 } else {
-                    voteCount[activePreference] = [vote]
+                    voteCount[preference] = [vote]
                 }
             }
         }
@@ -95,8 +95,17 @@ internal struct VoteCountingRound<Option: Votable> {
     /// option or nil if it does not exist
     @warn_unused_result
     internal func optionWithMajority() -> Option? {
-        //TODO: Change to .find(where:) in Swift 3
-        return voteCount.filter({ $0.1.count > (self.totalVotes / 2) }).map({ $0.0 }).first
+        
+        // TODO: When Swift 3 implements the this proposal:
+        // https://github.com/apple/swift-evolution/blob/c6121e0ceaab851e6a74f8044cdef1ccb1afb409/proposals/0032-sequencetype-find.md
+        // this can be change to
+        // return voteCount.first(where: { $0.1.count > (self.totalVotes / 2) })?.0
+    
+        guard let indexOfOptionWithMajority = voteCount.indexOf({ $0.1.count > (self.totalVotes / 2) }) else {
+            return nil
+        }
+        return voteCount[indexOfOptionWithMajority].0
+        
     }
     
     @warn_unused_result
