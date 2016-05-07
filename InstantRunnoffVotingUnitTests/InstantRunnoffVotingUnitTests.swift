@@ -108,9 +108,9 @@ class InstantRunnoffVotingUnitTests: XCTestCase {
                 votes.append(try Vote(preferences: [.AltC]))
             }
             for _ in 1...4 {
-                votes.append(try Vote(preferences: [.AltD]))
+                votes.append(try Vote(preferences: [.AltD, .AltE]))
             }
-            votes.append(try Vote(preferences: [.AltE, .AltA]))
+            votes.append(try Vote(preferences: [.AltE, .AltF, .AltA]))
             votes.append(try Vote(preferences: [.AltF, .AltB]))
         } catch {
             XCTFail("Failed to create votes")
