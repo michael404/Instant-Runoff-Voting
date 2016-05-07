@@ -22,7 +22,7 @@ public struct Vote<Option: Votable> {
     
     internal mutating func next() -> Option? {
         defer { index = index.successor() }
-        return preferences.indices.contains(index) ? preferences[index] : nil
+        return index < preferences.endIndex ? preferences[index] : nil
     }
     
 }
