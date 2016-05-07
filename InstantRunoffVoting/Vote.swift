@@ -20,13 +20,9 @@ public struct Vote<Option: Votable> {
         self.index = self.preferences.startIndex
     }
     
-    internal func current() -> Option? {
-        return preferences.indices.contains(index) ? preferences[index] : nil
-    }
-    
     internal mutating func next() -> Option? {
         defer { index = index.successor() }
-        return current()
+        return preferences.indices.contains(index) ? preferences[index] : nil
     }
     
 }
