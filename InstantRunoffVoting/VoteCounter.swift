@@ -64,9 +64,8 @@ extension VoteCounter: CustomStringConvertible {
             for (option, vote) in voteCountingRound {
                 desc += option.description + ": " + vote.count.description + ", "
             }
-            desc += "\n"
             
-            desc += "Current distribution:\n"
+            desc += "\nCurrent distribution:\n"
             for (option, vote) in voteCountingRound {
                 desc += " - " + option.description + ": " + vote.description + "\n"
             }
