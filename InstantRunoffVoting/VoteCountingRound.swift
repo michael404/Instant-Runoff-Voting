@@ -97,7 +97,7 @@ internal struct VoteCountingRound<Option: Votable> {
     internal func optionWithMajority() -> Option? {
         
         // TODO: When Swift 3 implements the this proposal:
-        // https://github.com/apple/swift-evolution/blob/c6121e0ceaab851e6a74f8044cdef1ccb1afb409/proposals/0032-sequencetype-find.md
+        // https://github.com/apple/swift-evolution/blob/master/proposals/0032-sequencetype-find.md
         // this can be change to
         // return voteCount.first(where: { $0.1.count > (self.totalVotes / 2) })?.0
     
