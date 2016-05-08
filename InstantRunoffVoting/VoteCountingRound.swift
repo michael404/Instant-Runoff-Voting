@@ -64,28 +64,24 @@ internal struct VoteCountingRound<Option: Votable> {
             continue
         }
 
-        // We have found that vote, and can therefore remove every option
-        // that is less popular than this vote
-        for optionToRemove in votesRemaining.map({ $0.0 }) {
-            voteCount.removeValueForKey(optionToRemove)
-        }
-        
-        let votesToRedistribute = votesRemaining.flatMap({ $0.1 })
-        
         // Check that we eliminate at least one option
-        guard !votesToRedistribute.isEmpty else {
+        guard !votesRemaining.isEmpty else {
             throw VoteError.UnresolvableTie
         }
-
-        // Redistribute the votes to the next voting option that are stil valid
-        for var vote in votesToRedistribute {
         
-            while let preference = vote.next() {
+        // We have found that vote, and can therefore remove every option
+        // that is less popular than this from voteCount and add them back
+        // to the next valid preference for each vote
+        for optionToRemove in votesRemaining.map({ $0.0 }) {
+            
+            for var vote in voteCount.removeValueForKey(optionToRemove)! {
                 
-                // Only add votes to options that are still valid in this round
-                if let _ = voteCount[preference] {
-                    voteCount[preference]!.append(vote)
-                    break
+                while let preference = vote.next() {
+                    
+                    // Only add votes to options that are still valid in this round
+                    if voteCount[preference]?.append(vote) != nil {
+                        break
+                    }
                 }
             }
         }
