@@ -31,15 +31,12 @@ internal struct VoteCountingRound<Option: Votable> {
     init(fromUncountedBallot ballot: [Vote<Option>]) {
         
         voteCount = [:]
-        
         for var vote in ballot {
             
             // Discard votes that do not have any preferences
             if let preference = vote.next() {
                 // Add vote to array or initialize array if is not allready initialized
-                if let _ = voteCount[preference] {
-                    voteCount[preference]!.append(vote)
-                } else {
+                if voteCount[preference]?.append(vote) == nil {
                     voteCount[preference] = [vote]
                 }
             }
@@ -75,9 +72,7 @@ internal struct VoteCountingRound<Option: Votable> {
         for optionToRemove in votesRemaining.map({ $0.0 }) {
             
             for var vote in voteCount.removeValueForKey(optionToRemove)! {
-                
                 while let preference = vote.next() {
-                    
                     // Only add votes to options that are still valid in this round
                     if voteCount[preference]?.append(vote) != nil {
                         break
@@ -92,12 +87,14 @@ internal struct VoteCountingRound<Option: Votable> {
     @warn_unused_result
     internal func optionWithMajority() -> Option? {
         
+        let votesNeededForMajority = self.totalVotes / 2
+        
         // TODO: When Swift 3 implements the this proposal:
         // https://github.com/apple/swift-evolution/blob/master/proposals/0032-sequencetype-find.md
         // this can be change to
-        // return voteCount.first(where: { $0.1.count > (self.totalVotes / 2) })?.0
-    
-        guard let indexOfOptionWithMajority = voteCount.indexOf({ $0.1.count > (self.totalVotes / 2) }) else {
+        // return voteCount.first(where: { $0.1.count > votesNeededForMajority })?.0
+        
+        guard let indexOfOptionWithMajority = voteCount.indexOf({ $0.1.count > votesNeededForMajority }) else {
             return nil
         }
         return voteCount[indexOfOptionWithMajority].0
