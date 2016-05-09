@@ -8,7 +8,7 @@ public struct VoteCounter<Option: Votable> {
     /// An array of dictionaries indicating the number of votes for the options
     /// in all the rounds
     var results: [[Option: Int]] {
-        return self.voteCountingRounds.map({ $0.results })
+        return self.voteCountingRounds.map({ $0.numberOfVotesPerOption })
     }
     
     /// Initialize and do the counting

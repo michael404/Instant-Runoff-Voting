@@ -12,18 +12,18 @@ internal struct VoteCountingRound<Option: Votable> {
         return Array(voteCount.keys)
     }
     
-    var results: [Option: Int] {
+    var numberOfVotesPerOption: [Option: Int] {
         
         // TODO: If this proposal gets included in Swift 3:
         // https://github.com/apple/swift-evolution/pull/125
         // ...this can be changed to:
         // return Dictionary(voteCount.map({ $0, $1.count }))!
         
-        var results: [Option: Int] = [:]
+        var numberOfVotesPerOption: [Option: Int] = [:]
         for (option, votes) in voteCount {
-            results[option] = votes.count
+            numberOfVotesPerOption[option] = votes.count
         }
-        return results
+        return numberOfVotesPerOption
     }
     
     /// Initialize from an uncounted ballot.
@@ -70,7 +70,7 @@ internal struct VoteCountingRound<Option: Votable> {
         
         // Sort options by popularity (from least popular to most popular), so that they can
         // be eliminated one by one.
-        var optionsSortedByVotes = results.sort({ $0.1 < $1.1 })
+        var optionsSortedByVotes = numberOfVotesPerOption.sort({ $0.1 < $1.1 })
         
         
         // Continue looping until we find he most popular (last) option that individually has a
