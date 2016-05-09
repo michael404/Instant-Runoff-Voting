@@ -30,7 +30,7 @@ class InstantRunnoffVotingPerformanceTest: XCTestCase {
         
         var votes: [Vote<TestOptions>] = []
         
-        let performanceFactor = 200
+        let performanceFactor = 300
         
         do {
             for _ in 1...(7 * performanceFactor) {
@@ -66,7 +66,7 @@ class InstantRunnoffVotingPerformanceTest: XCTestCase {
         var votes: [Vote<Int>] = []
         
         do {
-            for i in 1...70 {
+            for i in 1...150 {
                 for _ in 1...i {
                     votes.append(try Vote(preferences: [i]))
                 }
@@ -85,7 +85,7 @@ class InstantRunnoffVotingPerformanceTest: XCTestCase {
         
         var votes: [Vote<TestOptions>] = []
         
-        let performanceFactor = 800
+        let performanceFactor = 1200
         
         self.measureBlock {
             do {
