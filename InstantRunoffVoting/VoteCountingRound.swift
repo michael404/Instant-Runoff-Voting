@@ -65,6 +65,7 @@ internal struct VoteCountingRound<Option: Votable> {
     /// Find options to eliminate.
     /// The elemination algorithm is aggressive, and eliminates all options that together
     /// have less votes than the last option not to be eliminated.
+    @warn_unused_result
     private func getOptionsToEliminate() -> [Option] {
         
         // Sort options by popularity (from least popular to most popular), so that they can
@@ -85,12 +86,9 @@ internal struct VoteCountingRound<Option: Votable> {
     
     /// Removes votes for the options specified from voteCount and returns an
     /// array of all votes that were removed
+    @warn_unused_result
     private mutating func removeVotesFor(options options: [Option]) -> [Vote<Option>] {
-        var votesToRedistribute: [Vote<Option>] = []
-        for option in options {
-            votesToRedistribute.appendContentsOf(self.voteCount.removeValueForKey(option)!)
-        }
-        return votesToRedistribute
+        return options.flatMap({ self.voteCount.removeValueForKey($0)! })
     }
     
     /// Redistributes votes to the next preference that is stil valid, if
