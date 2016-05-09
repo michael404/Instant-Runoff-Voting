@@ -35,6 +35,7 @@ internal struct VoteCountingRound<Option: Votable> {
             
             // Discard votes that do not have any preferences
             if let preference = vote.next() {
+                
                 // Add vote to array or initialize array if is not allready initialized
                 if voteCount[preference]?.append(vote) == nil {
                     voteCount[preference] = [vote]
@@ -44,12 +45,27 @@ internal struct VoteCountingRound<Option: Votable> {
     }
     
     /// Initialize from a previous round. This will include trying to eliminate options.
-    /// The elemination algorithm is aggressive, and eliminates all options that together
-    /// have less votes than the last option not to be eliminated.
     init(setUpNextRoundFromPreviousRound previousRound: VoteCountingRound<Option>) throws {
         
         // Copy over the voteCount from the last round as a start
         self.voteCount = previousRound.voteCount
+        
+        let optionsToEliminate = getOptionsToEliminate()
+        
+        // Check that we eliminate at least one option
+        guard !optionsToEliminate.isEmpty else {
+            throw VoteError.UnresolvableTie
+        }
+        
+        let votesToRedistribute = removeVotesFor(options: optionsToEliminate)
+        
+        redistribute(votes: votesToRedistribute)
+    }
+    
+    /// Find options to eliminate.
+    /// The elemination algorithm is aggressive, and eliminates all options that together
+    /// have less votes than the last option not to be eliminated.
+    private func getOptionsToEliminate() -> [Option] {
         
         // Sort options by popularity (from least popular to most popular), so that they can
         // be eliminated one by one.
@@ -61,22 +77,29 @@ internal struct VoteCountingRound<Option: Votable> {
             continue
         }
 
-        // Check that we eliminate at least one option
-        guard !votesRemaining.isEmpty else {
-            throw VoteError.UnresolvableTie
+        // We have found that vote, and can therefore return every option
+        // that is less popular than this from voteCount
+        return votesRemaining.flatMap({ $0.0 })
+    }
+    
+    /// Removes votes for the options specified from voteCount and returns an
+    /// array of all votes that were removed
+    private mutating func removeVotesFor(options options: [Option]) -> [Vote<Option>] {
+        var votesToRedistribute: [Vote<Option>] = []
+        for option in options {
+            votesToRedistribute.appendContentsOf(self.voteCount.removeValueForKey(option)!)
         }
-        
-        // We have found that vote, and can therefore remove every option
-        // that is less popular than this from voteCount and add them back
-        // to the next valid preference for each vote
-        for optionToRemove in votesRemaining.map({ $0.0 }) {
-            
-            for var vote in voteCount.removeValueForKey(optionToRemove)! {
-                while let preference = vote.next() {
-                    // Only add votes to options that are still valid in this round
-                    if voteCount[preference]?.append(vote) != nil {
-                        break
-                    }
+        return votesToRedistribute
+    }
+    
+    /// Redistributes votes to the next preference that is stil valid, if
+    /// that is available. Discards votes that do no longer have valid preferences.
+    private mutating func redistribute(votes votes: Votes) {
+        for var vote in votes {
+            while let preference = vote.next() {
+                // Only add votes to options that are still valid in this round
+                if voteCount[preference]?.append(vote) != nil {
+                    break
                 }
             }
         }
