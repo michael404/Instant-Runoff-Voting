@@ -69,17 +69,18 @@ internal struct VoteCountingRound<Option: Votable> {
         
         // Sort options by popularity (from least popular to most popular), so that they can
         // be eliminated one by one.
-        var votesRemaining = voteCount.sort({ $0.1.count < $1.1.count })
+        var optionsSortedByVotes = results.sort({ $0.1 < $1.1 })
+        
         
         // Continue looping until we find he most popular (last) option that individually has a
         // higher number of votes than all options after it.
-        while votesRemaining.removeLast().1.count <= votesRemaining.reduce(0, combine: { $0 + $1.1.count }) {
+        while optionsSortedByVotes.removeLast().1 <= optionsSortedByVotes.reduce(0, combine: { $0 + $1.1 }) {
             continue
         }
 
-        // We have found that vote, and can therefore return every option
-        // that is less popular than this from voteCount
-        return votesRemaining.flatMap({ $0.0 })
+        // We have found that option, and can therefore return every option
+        // that is less popular than this
+        return optionsSortedByVotes.flatMap({ $0.0 })
     }
     
     /// Removes votes for the options specified from voteCount and returns an
