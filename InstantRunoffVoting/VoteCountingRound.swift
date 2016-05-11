@@ -45,7 +45,7 @@ internal struct VoteCountingRound<Option: Votable> {
     }
     
     /// Initialize from a previous round. This will include trying to eliminate options.
-    init(setUpNextRoundFromPreviousRound previousRound: VoteCountingRound<Option>) throws {
+    init(fromPreviousRound previousRound: VoteCountingRound<Option>) throws {
         
         // Copy over the voteCount from the last round as a start
         self.voteCount = previousRound.voteCount

@@ -21,7 +21,7 @@ public struct VoteCounter<Option: Votable> {
         while let voteCountingRound = voteCountingRounds.last where voteCountingRound.optionWithMajority() == nil {
             
             // If no winner is found, set up next round based on the current
-            voteCountingRounds.append(try VoteCountingRound(setUpNextRoundFromPreviousRound: voteCountingRound))
+            voteCountingRounds.append(try VoteCountingRound(fromPreviousRound: voteCountingRound))
         }
         
         self.winner = voteCountingRounds.last!.optionWithMajority()!
