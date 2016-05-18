@@ -38,7 +38,7 @@ extension VoteCounter: CustomStringConvertible {
         
         desc += ("Number of votes in uncounted ballot: " + voteCountingRounds[0].totalVotes.description + "\n")
         
-        for (round, voteCountingRound) in voteCountingRounds.enumerate() {
+        for (round, voteCountingRound) in voteCountingRounds.enumerated() {
             desc += "\nRound " + round.description + "\n"
             
             if round > 0 {
@@ -46,13 +46,13 @@ extension VoteCounter: CustomStringConvertible {
                 // Check which options have been eliminated since the last round
                 let lastRoundOptions = Set(voteCountingRounds[round - 1].allOptions)
                 let thisRoundOption = Set(voteCountingRound.allOptions)
-                let optionsToEliminate = lastRoundOptions.subtract(thisRoundOption)
+                let optionsToEliminate = lastRoundOptions.subtracting(thisRoundOption)
                 
                 desc += optionsToEliminate.count.description + " option(s) were eliminated in the same round\n"
                 
                 for optionToEliminate in optionsToEliminate {
                     desc += "Option to eliminate: " + optionToEliminate.description + "\n"
-                    for voteToRedistribute in voteCountingRounds[round - 1].votesFor(optionToEliminate) {
+                    for voteToRedistribute in voteCountingRounds[round - 1].votesFor(option: optionToEliminate) {
                         desc += " - Resorting vote: " + voteToRedistribute.description + "\n"
                     }
                 }

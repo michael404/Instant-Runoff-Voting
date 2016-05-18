@@ -70,7 +70,7 @@ internal struct VoteCountingRound<Option: Votable> {
         
         // Sort options by popularity (from least popular to most popular), so that they can
         // be eliminated one by one.
-        var optionsSortedByVotes = numberOfVotesPerOption.sort({ $0.1 < $1.1 })
+        var optionsSortedByVotes = numberOfVotesPerOption.sorted(isOrderedBefore: { $0.1 < $1.1 })
         
         
         // Continue looping until we find he most popular (last) option that individually has a
@@ -87,13 +87,13 @@ internal struct VoteCountingRound<Option: Votable> {
     /// Removes votes for the options specified from voteCount and returns an
     /// array of all votes that were removed
     @warn_unused_result
-    private mutating func removeVotesFor(options options: [Option]) -> [Vote<Option>] {
-        return options.flatMap({ self.voteCount.removeValueForKey($0)! })
+    private mutating func removeVotesFor(options: [Option]) -> [Vote<Option>] {
+        return options.flatMap({ self.voteCount.removeValue(forKey: $0)! })
     }
     
     /// Redistributes votes to the next preference that is stil valid, if
     /// that is available. Discards votes that do no longer have valid preferences.
-    private mutating func redistribute(votes votes: Votes) {
+    private mutating func redistribute(votes: Votes) {
         for var vote in votes {
             while let preference = vote.next() {
                 // Only add votes to options that are still valid in this round
@@ -116,7 +116,7 @@ internal struct VoteCountingRound<Option: Votable> {
         // this can be change to
         // return voteCount.first(where: { $0.1.count > votesNeededForMajority })?.0
         
-        guard let indexOfOptionWithMajority = voteCount.indexOf({ $0.1.count > votesNeededForMajority }) else {
+        guard let indexOfOptionWithMajority = voteCount.index(where: { $0.1.count > votesNeededForMajority }) else {
             return nil
         }
         return voteCount[indexOfOptionWithMajority].0
@@ -133,12 +133,12 @@ internal struct VoteCountingRound<Option: Votable> {
     
 }
 
-extension VoteCountingRound: SequenceType {
+extension VoteCountingRound: Sequence {
     
-    internal typealias Generator = DictionaryGenerator<Option, Votes>
+    internal typealias Iterator = DictionaryIterator<Option, Votes>
     
-    internal func generate() -> VoteCountingRound.Generator {
-        return voteCount.generate()
+    internal func makeIterator() -> VoteCountingRound.Iterator {
+        return voteCount.makeIterator()
     }
     
 }
