@@ -2,7 +2,7 @@ internal struct VoteCountingRound<Option: Votable> {
     
     internal typealias Votes = [Vote<Option>]
     
-    private var voteCount: [Option: Votes]
+    internal private(set) var voteCount: [Option: Votes]
     
     var totalVotes: Int {
         return voteCount.reduce(0, combine: { $0 + $1.1.count })
@@ -133,16 +133,6 @@ internal struct VoteCountingRound<Option: Votable> {
             return votes
         }
         return []
-    }
-    
-}
-
-extension VoteCountingRound: Sequence {
-    
-    internal typealias Iterator = DictionaryIterator<Option, Votes>
-    
-    internal func makeIterator() -> VoteCountingRound.Iterator {
-        return voteCount.makeIterator()
     }
     
 }
