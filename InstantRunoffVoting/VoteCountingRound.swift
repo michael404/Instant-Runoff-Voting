@@ -12,6 +12,8 @@ internal struct VoteCountingRound<Option: Votable> {
         return Array(voteCount.keys)
     }
     
+    var eliminatedOptions: [Option] = []
+    
     var numberOfVotesPerOption: [Option: Int] {
         
         // TODO: If this proposal gets included in Swift 3:
@@ -56,6 +58,8 @@ internal struct VoteCountingRound<Option: Votable> {
         guard !optionsToEliminate.isEmpty else {
             throw VoteError.UnresolvableTie
         }
+        
+        self.eliminatedOptions = optionsToEliminate
         
         let votesToRedistribute = removeVotesFor(options: optionsToEliminate)
         

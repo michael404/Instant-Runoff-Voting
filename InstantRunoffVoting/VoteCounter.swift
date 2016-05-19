@@ -42,17 +42,12 @@ extension VoteCounter: CustomStringConvertible {
             desc += "\nRound " + round.description + "\n"
             
             if round > 0 {
+
+                desc += voteCountingRound.eliminatedOptions.count.description + " option(s) were eliminated in the round\n"
                 
-                // Check which options have been eliminated since the last round
-                let lastRoundOptions = Set(voteCountingRounds[round - 1].allOptions)
-                let thisRoundOption = Set(voteCountingRound.allOptions)
-                let optionsToEliminate = lastRoundOptions.subtracting(thisRoundOption)
-                
-                desc += optionsToEliminate.count.description + " option(s) were eliminated in the same round\n"
-                
-                for optionToEliminate in optionsToEliminate {
-                    desc += "Option to eliminate: " + optionToEliminate.description + "\n"
-                    for voteToRedistribute in voteCountingRounds[round - 1].votesFor(option: optionToEliminate) {
+                for eliminatedOption in voteCountingRound.eliminatedOptions {
+                    desc += "Option to eliminate: " + eliminatedOption.description + "\n"
+                    for voteToRedistribute in voteCountingRounds[round - 1].votesFor(option: eliminatedOption) {
                         desc += " - Resorting vote: " + voteToRedistribute.description + "\n"
                     }
                 }
