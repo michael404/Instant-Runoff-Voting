@@ -66,7 +66,7 @@ extension VoteCounter: CustomStringConvertible {
             }
             
             if let winner = voteCountingRound.optionWithMajority() {
-                desc += "Found winner:" + winner.description + "\n\n"
+                desc += "Found winner: " + winner.description + "\n\n"
             } else {
                 desc += "No winner found in this round, moving on to next\n\n"
             }
