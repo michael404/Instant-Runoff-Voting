@@ -66,6 +66,8 @@ internal struct VoteCountingRound<Option: Votable> {
         redistribute(votes: votesToRedistribute)
     }
     
+    // TODO: Remove "@warn_unused_result", once that is the default in Swift 3
+    
     /// Find options to eliminate.
     /// The elemination algorithm is aggressive, and eliminates all options that together
     /// have less votes than the last option not to be eliminated.
