@@ -17,7 +17,7 @@ internal struct VoteCountingRound<Option: Votable> {
     var numberOfVotesPerOption: [Option: Int] {
         
         // TODO: If this proposal gets included in Swift 3:
-        // https://github.com/apple/swift-evolution/pull/125
+        // https://github.com/apple/swift-evolution/blob/master/proposals/0100-add-sequence-based-init-and-merge-to-dictionary.md
         // ...this can be changed to:
         // return Dictionary(voteCount.map({ $0, $1.count }))!
         
