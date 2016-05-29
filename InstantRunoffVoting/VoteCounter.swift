@@ -38,21 +38,16 @@ extension VoteCounter: CustomStringConvertible {
         
         desc += ("Number of votes in uncounted ballot: " + voteCountingRounds[0].totalVotes.description + "\n")
         
-        for (round, voteCountingRound) in voteCountingRounds.enumerate() {
+        for (round, voteCountingRound) in voteCountingRounds.enumerated() {
             desc += "\nRound " + round.description + "\n"
             
             if round > 0 {
+
+                desc += voteCountingRound.eliminatedOptions.count.description + " option(s) were eliminated in the round\n"
                 
-                // Check which options have been eliminated since the last round
-                let lastRoundOptions = Set(voteCountingRounds[round - 1].allOptions)
-                let thisRoundOption = Set(voteCountingRound.allOptions)
-                let optionsToEliminate = lastRoundOptions.subtract(thisRoundOption)
-                
-                desc += optionsToEliminate.count.description + " option(s) were eliminated in the same round\n"
-                
-                for optionToEliminate in optionsToEliminate {
-                    desc += "Option to eliminate: " + optionToEliminate.description + "\n"
-                    for voteToRedistribute in voteCountingRounds[round - 1].votesFor(optionToEliminate) {
+                for eliminatedOption in voteCountingRound.eliminatedOptions {
+                    desc += "Option to eliminate: " + eliminatedOption.description + "\n"
+                    for voteToRedistribute in voteCountingRounds[round - 1].votesFor(option: eliminatedOption) {
                         desc += " - Resorting vote: " + voteToRedistribute.description + "\n"
                     }
                 }
@@ -61,17 +56,17 @@ extension VoteCounter: CustomStringConvertible {
             desc += "Number of valid votes in this round: " + voteCountingRound.totalVotes.description + "\n"
             
             desc += "Current count: "
-            for (option, vote) in voteCountingRound {
+            for (option, vote) in voteCountingRound.voteCount {
                 desc += option.description + ": " + vote.count.description + ", "
             }
             
             desc += "\nCurrent distribution:\n"
-            for (option, vote) in voteCountingRound {
+            for (option, vote) in voteCountingRound.voteCount {
                 desc += " - " + option.description + ": " + vote.description + "\n"
             }
             
             if let winner = voteCountingRound.optionWithMajority() {
-                desc += "Found winner:" + winner.description + "\n\n"
+                desc += "Found winner: " + winner.description + "\n\n"
             } else {
                 desc += "No winner found in this round, moving on to next\n\n"
             }

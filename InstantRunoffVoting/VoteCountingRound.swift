@@ -2,7 +2,7 @@ internal struct VoteCountingRound<Option: Votable> {
     
     internal typealias Votes = [Vote<Option>]
     
-    private var voteCount: [Option: Votes]
+    internal private(set) var voteCount: [Option: Votes]
     
     var totalVotes: Int {
         return voteCount.reduce(0, combine: { $0 + $1.1.count })
@@ -12,10 +12,12 @@ internal struct VoteCountingRound<Option: Votable> {
         return Array(voteCount.keys)
     }
     
+    var eliminatedOptions: [Option] = []
+    
     var numberOfVotesPerOption: [Option: Int] {
         
         // TODO: If this proposal gets included in Swift 3:
-        // https://github.com/apple/swift-evolution/pull/125
+        // https://github.com/apple/swift-evolution/blob/master/proposals/0100-add-sequence-based-init-and-merge-to-dictionary.md
         // ...this can be changed to:
         // return Dictionary(voteCount.map({ $0, $1.count }))!
         
@@ -57,10 +59,14 @@ internal struct VoteCountingRound<Option: Votable> {
             throw VoteError.UnresolvableTie
         }
         
+        self.eliminatedOptions = optionsToEliminate
+        
         let votesToRedistribute = removeVotesFor(options: optionsToEliminate)
         
         redistribute(votes: votesToRedistribute)
     }
+    
+    // TODO: Remove "@warn_unused_result", once that is the default in Swift 3
     
     /// Find options to eliminate.
     /// The elemination algorithm is aggressive, and eliminates all options that together
@@ -70,7 +76,7 @@ internal struct VoteCountingRound<Option: Votable> {
         
         // Sort options by popularity (from least popular to most popular), so that they can
         // be eliminated one by one.
-        var optionsSortedByVotes = numberOfVotesPerOption.sort({ $0.1 < $1.1 })
+        var optionsSortedByVotes = numberOfVotesPerOption.sorted(isOrderedBefore: { $0.1 < $1.1 })
         
         
         // Continue looping until we find he most popular (last) option that individually has a
@@ -87,13 +93,13 @@ internal struct VoteCountingRound<Option: Votable> {
     /// Removes votes for the options specified from voteCount and returns an
     /// array of all votes that were removed
     @warn_unused_result
-    private mutating func removeVotesFor(options options: [Option]) -> [Vote<Option>] {
-        return options.flatMap({ self.voteCount.removeValueForKey($0)! })
+    private mutating func removeVotesFor(options: [Option]) -> [Vote<Option>] {
+        return options.flatMap({ self.voteCount.removeValue(forKey: $0)! })
     }
     
     /// Redistributes votes to the next preference that is stil valid, if
     /// that is available. Discards votes that do no longer have valid preferences.
-    private mutating func redistribute(votes votes: Votes) {
+    private mutating func redistribute(votes: Votes) {
         for var vote in votes {
             while let preference = vote.next() {
                 // Only add votes to options that are still valid in this round
@@ -116,7 +122,7 @@ internal struct VoteCountingRound<Option: Votable> {
         // this can be change to
         // return voteCount.first(where: { $0.1.count > votesNeededForMajority })?.0
         
-        guard let indexOfOptionWithMajority = voteCount.indexOf({ $0.1.count > votesNeededForMajority }) else {
+        guard let indexOfOptionWithMajority = voteCount.index(where: { $0.1.count > votesNeededForMajority }) else {
             return nil
         }
         return voteCount[indexOfOptionWithMajority].0
@@ -129,16 +135,6 @@ internal struct VoteCountingRound<Option: Votable> {
             return votes
         }
         return []
-    }
-    
-}
-
-extension VoteCountingRound: SequenceType {
-    
-    internal typealias Generator = DictionaryGenerator<Option, Votes>
-    
-    internal func generate() -> VoteCountingRound.Generator {
-        return voteCount.generate()
     }
     
 }

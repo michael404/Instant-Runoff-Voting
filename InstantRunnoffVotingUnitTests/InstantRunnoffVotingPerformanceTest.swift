@@ -55,7 +55,7 @@ class InstantRunnoffVotingPerformanceTest: XCTestCase {
             XCTFail("Failed to create votes")
         }
         
-        self.measureBlock {
+        self.measure {
             let voteCounter = try! VoteCounter(ballot: votes)
             let _ = voteCounter.results
         }
@@ -75,7 +75,7 @@ class InstantRunnoffVotingPerformanceTest: XCTestCase {
             XCTFail("Failed to create votes")
         }
         
-        self.measureBlock {
+        self.measure {
             let voteCounter = try! VoteCounter(ballot: votes)
             let _ = voteCounter.results
         }
@@ -87,7 +87,7 @@ class InstantRunnoffVotingPerformanceTest: XCTestCase {
         
         let performanceFactor = 1200
         
-        self.measureBlock {
+        self.measure {
             do {
                 for _ in 1...(7 * performanceFactor) {
                     votes.append(try Vote(preferences: [.AltA, .AltC, .AltF, .AltB]))

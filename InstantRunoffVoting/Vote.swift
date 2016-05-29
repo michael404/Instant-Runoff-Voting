@@ -22,7 +22,7 @@ public struct Vote<Option: Votable> {
     
     /// Advance to the next preference and return it, or nil if no next preference exists
     internal mutating func next() -> Option? {
-        defer { index = index.successor() }
+        defer { index = preferences.index(after: index) }
         return index < preferences.endIndex ? preferences[index] : nil
     }
     
@@ -31,7 +31,7 @@ public struct Vote<Option: Votable> {
 extension Vote: CustomStringConvertible {
     
     public var description: String {
-        return self.preferences.map({ $0.description }).joinWithSeparator(">")
+        return self.preferences.map({ $0.description }).joined(separator: ">")
     }
     
 }
