@@ -114,19 +114,8 @@ internal struct VoteCountingRound<Option: Votable> {
     /// option or nil if it does not exist
     @warn_unused_result
     internal func optionWithMajority() -> Option? {
-        
         let votesNeededForMajority = self.totalVotes / 2
-        
-        // TODO: When Swift 3 implements the this proposal:
-        // https://github.com/apple/swift-evolution/blob/master/proposals/0032-sequencetype-find.md
-        // this can be change to
-        // return voteCount.first(where: { $0.1.count > votesNeededForMajority })?.0
-        
-        guard let indexOfOptionWithMajority = voteCount.index(where: { $0.1.count > votesNeededForMajority }) else {
-            return nil
-        }
-        return voteCount[indexOfOptionWithMajority].0
-        
+        return voteCount.first(where: { $0.1.count > votesNeededForMajority })?.0
     }
     
     @warn_unused_result
