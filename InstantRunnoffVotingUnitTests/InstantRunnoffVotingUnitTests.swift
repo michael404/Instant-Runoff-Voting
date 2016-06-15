@@ -297,7 +297,7 @@ class InstantRunnoffVotingUnitTests: XCTestCase {
         do {
             let _ = try VoteCounter(ballot: votes)
         } catch let e as VoteError {
-            XCTAssertEqual(e, VoteError.UnresolvableTie)
+            XCTAssertEqual(e, VoteError.unresolvableTie)
         } catch {
             XCTFail("Unresolvable tie threw wrong error type")
         }
@@ -324,7 +324,7 @@ class InstantRunnoffVotingUnitTests: XCTestCase {
         do {
             let _ = try VoteCounter(ballot: votes)
         } catch let e as VoteError {
-            XCTAssertEqual(e, VoteError.UnresolvableTie)
+            XCTAssertEqual(e, VoteError.unresolvableTie)
         } catch {
             XCTFail("Unresolvable tie threw wrong error type")
         }
@@ -340,7 +340,7 @@ class InstantRunnoffVotingUnitTests: XCTestCase {
         do {
             let _ = try Vote(preferences: Array<TestOptions>())
         } catch let e as VoteError {
-            XCTAssertEqual(e, VoteError.NoPreferencesInVote)
+            XCTAssertEqual(e, VoteError.noPreferencesInVote)
         } catch {
             XCTFail("testVoteWithNoOptions threw wrong error type")
         }
@@ -358,7 +358,7 @@ class InstantRunnoffVotingUnitTests: XCTestCase {
             let _ =
             try Vote(preferences: [TestOptions.AltB, .AltB])
         } catch let e as VoteError {
-            XCTAssertEqual(e, VoteError.OptionPreferredMoreThanOnceInVote)
+            XCTAssertEqual(e, VoteError.optionPreferredMoreThanOnceInVote)
         } catch {
             XCTFail("testVoteRepeatedOptions threw wrong error type")
         }

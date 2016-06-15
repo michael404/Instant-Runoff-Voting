@@ -56,7 +56,7 @@ internal struct VoteCountingRound<Option: Votable> {
         
         // Check that we eliminate at least one option
         guard !optionsToEliminate.isEmpty else {
-            throw VoteError.UnresolvableTie
+            throw VoteError.unresolvableTie
         }
         
         self.eliminatedOptions = optionsToEliminate

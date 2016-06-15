@@ -8,12 +8,12 @@ public struct Vote<Option: Votable> {
         
         // Check that there is at least one preference
         guard !preferences.isEmpty else {
-            throw VoteError.NoPreferencesInVote
+            throw VoteError.noPreferencesInVote
         }
         
         // Check that no option is preferred more than once
         guard Set(preferences).count == preferences.count else {
-            throw VoteError.OptionPreferredMoreThanOnceInVote
+            throw VoteError.optionPreferredMoreThanOnceInVote
         }
         
         self.preferences = preferences

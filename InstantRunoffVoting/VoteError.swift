@@ -1,6 +1,6 @@
 public enum VoteError: ErrorProtocol {
-    case NoPreferencesInVote
-    case OptionPreferredMoreThanOnceInVote
-    case VotesAlreadyCounted
-    case UnresolvableTie
+    case noPreferencesInVote
+    case optionPreferredMoreThanOnceInVote
+    case votesAlreadyCounted
+    case unresolvableTie
 }
