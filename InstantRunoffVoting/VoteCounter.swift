@@ -17,17 +17,19 @@ public struct VoteCounter<Option: Votable> {
         // Set up first round
         voteCountingRounds = [VoteCountingRound(fromUncountedBallot: ballot)]
         
-        // As long as no option has majority, keep adding more elimination rounds
-        while let voteCountingRound = voteCountingRounds.last where voteCountingRound.optionWithMajority() == nil {
-            
-            // If no winner is found, set up next round based on the current
-            voteCountingRounds.append(try VoteCountingRound(fromPreviousRound: voteCountingRound))
+        // As long as no option has majority, keep adding more elimination rounds by
+        // seting up the next round based on the current and continue looping.
+        // Otherwise, break the loop.
+        while let voteCountingRound = voteCountingRounds.last {
+            if voteCountingRound.optionWithMajority() == nil {
+                voteCountingRounds.append(try VoteCountingRound(fromPreviousRound: voteCountingRound))
+            } else {
+                break
+            }
         }
-        
+
         self.winner = voteCountingRounds.last!.optionWithMajority()!
-        
     }
-    
 }
 
 extension VoteCounter: CustomStringConvertible {
