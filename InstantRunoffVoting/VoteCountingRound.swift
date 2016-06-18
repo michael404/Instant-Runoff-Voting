@@ -66,12 +66,9 @@ internal struct VoteCountingRound<Option: Votable> {
         redistribute(votes: votesToRedistribute)
     }
     
-    // TODO: Remove "@warn_unused_result", once that is the default in Swift 3
-    
     /// Find options to eliminate.
     /// The elemination algorithm is aggressive, and eliminates all options that together
     /// have less votes than the last option not to be eliminated.
-    @warn_unused_result
     private func getOptionsToEliminate() -> [Option] {
         
         // Sort options by popularity (from least popular to most popular), so that they can
@@ -92,7 +89,6 @@ internal struct VoteCountingRound<Option: Votable> {
     
     /// Removes votes for the options specified from voteCount and returns an
     /// array of all votes that were removed
-    @warn_unused_result
     private mutating func removeVotesFor(options: [Option]) -> [Vote<Option>] {
         return options.flatMap({ self.voteCount.removeValue(forKey: $0)! })
     }
@@ -112,13 +108,11 @@ internal struct VoteCountingRound<Option: Votable> {
     
     /// Checks if there is an option that has more than 50% of the votes and returns that
     /// option or nil if it does not exist
-    @warn_unused_result
     internal func optionWithMajority() -> Option? {
         let votesNeededForMajority = self.totalVotes / 2
         return voteCount.first(where: { $0.1.count > votesNeededForMajority })?.0
     }
     
-    @warn_unused_result
     internal func votesFor(option: Option) -> Votes {
         if let votes = voteCount[option] {
             return votes
