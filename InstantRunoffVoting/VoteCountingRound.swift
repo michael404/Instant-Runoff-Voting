@@ -53,16 +53,14 @@ internal struct VoteCountingRound<Option: Votable> {
         // Copy over the voteCount from the last round as a start
         self.voteCount = previousRound.voteCount
         
-        let optionsToEliminate = getOptionsToEliminate()
+        self.eliminatedOptions = optionsToEliminate()
         
         // Check that we eliminate at least one option
-        guard !optionsToEliminate.isEmpty else {
+        guard !self.eliminatedOptions.isEmpty else {
             throw VoteError.unresolvableTie
         }
         
-        self.eliminatedOptions = optionsToEliminate
-        
-        let votesToRedistribute = removeVotesFor(options: optionsToEliminate)
+        let votesToRedistribute = removeVotes(for: self.eliminatedOptions)
         
         redistribute(votes: votesToRedistribute)
     }
@@ -70,7 +68,7 @@ internal struct VoteCountingRound<Option: Votable> {
     /// Find options to eliminate.
     /// The elemination algorithm is aggressive, and eliminates all options that together
     /// have less votes than the last option not to be eliminated.
-    private func getOptionsToEliminate() -> [Option] {
+    private func optionsToEliminate() -> [Option] {
         
         // Sort options by popularity (from least popular to most popular), so that they can
         // be eliminated one by one.
@@ -90,7 +88,7 @@ internal struct VoteCountingRound<Option: Votable> {
     
     /// Removes votes for the options specified from voteCount and returns an
     /// array of all votes that were removed
-    private mutating func removeVotesFor(options: [Option]) -> [Vote<Option>] {
+    private mutating func removeVotes(for options: [Option]) -> [Vote<Option>] {
         return options.flatMap({ self.voteCount.removeValue(forKey: $0)! })
     }
     
@@ -114,7 +112,7 @@ internal struct VoteCountingRound<Option: Votable> {
         return voteCount.first(where: { $0.1.count > votesNeededForMajority })?.0
     }
     
-    internal func votesFor(option: Option) -> Votes {
+    internal func votes(for option: Option) -> Votes {
         if let votes = voteCount[option] {
             return votes
         }

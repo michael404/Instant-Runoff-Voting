@@ -49,7 +49,7 @@ extension VoteCounter: CustomStringConvertible {
                 
                 for eliminatedOption in voteCountingRound.eliminatedOptions {
                     desc += "Option to eliminate: " + eliminatedOption.description + "\n"
-                    for voteToRedistribute in voteCountingRounds[round - 1].votesFor(option: eliminatedOption) {
+                    for voteToRedistribute in voteCountingRounds[round - 1].votes(for: eliminatedOption) {
                         desc += " - Resorting vote: " + voteToRedistribute.description + "\n"
                     }
                 }
