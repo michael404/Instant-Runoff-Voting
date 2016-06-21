@@ -8,6 +8,7 @@ internal struct VoteCountingRound<Option: Votable> {
         return voteCount.reduce(0, combine: { $0 + $1.1.count })
     }
     
+    // TODO: This should return a set, but that seems to impact performance for now
     var allOptions: [Option] {
         return Array(voteCount.keys)
     }
