@@ -21,11 +21,8 @@ public struct VoteCounter<Option: Votable> {
         // seting up the next round based on the current and continue looping.
         // Otherwise, break the loop.
         while let voteCountingRound = voteCountingRounds.last {
-            if voteCountingRound.optionWithMajority() == nil {
-                voteCountingRounds.append(try VoteCountingRound(fromPreviousRound: voteCountingRound))
-            } else {
-                break
-            }
+            guard voteCountingRound.optionWithMajority() == nil else { break }
+            voteCountingRounds.append(try VoteCountingRound(fromPreviousRound: voteCountingRound))
         }
 
         self.winner = voteCountingRounds.last!.optionWithMajority()!
