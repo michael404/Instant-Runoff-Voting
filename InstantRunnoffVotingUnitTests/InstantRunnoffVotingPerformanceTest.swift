@@ -1,11 +1,3 @@
-//
-//  InstantRunnoffVotingPerformanceTest.swift
-//  InstantRunoffVoting
-//
-//  Created by Michael Holmgren on 2016-01-11.
-//  Copyright © 2016 Michael Holmgren. All rights reserved.
-//
-
 import XCTest
 
 extension Int: Votable {

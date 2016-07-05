@@ -2,7 +2,7 @@ public struct Vote<Option: Votable> {
     
     private let preferences: [Option]
     
-    private var index: Int
+    private var index: Array<Option>.Index
     
     init(preferences: [Option]) throws {        
         
