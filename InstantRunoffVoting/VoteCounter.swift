@@ -20,7 +20,7 @@ public struct VoteCounter<Option: Votable> {
         // As long as no option has majority, keep adding more elimination rounds by
         // seting up the next round based on the current and continue looping.
         // Otherwise, break the loop.
-        while let voteCountingRound = voteCountingRounds.last where voteCountingRound.optionWithMajority() == nil {
+        while let voteCountingRound = voteCountingRounds.last, voteCountingRound.optionWithMajority() == nil {
             voteCountingRounds.append(try VoteCountingRound(fromPreviousRound: voteCountingRound))
         }
 
