@@ -5,7 +5,7 @@ internal struct VoteCountingRound<Option: Votable> {
     internal private(set) var voteCount: [Option: Votes]
     
     var totalVotes: Int {
-        return voteCount.reduce(0, combine: { $0 + $1.1.count })
+        return voteCount.reduce(0, { $0 + $1.1.count })
     }
     
     // TODO: This should return a set, but that seems to impact performance for now
@@ -72,12 +72,12 @@ internal struct VoteCountingRound<Option: Votable> {
         
         // Sort options by popularity (from least popular to most popular), so that they can
         // be eliminated one by one.
-        var optionsSortedByVotes = numberOfVotesPerOption.sorted(isOrderedBefore: { $0.1 < $1.1 })
+        var optionsSortedByVotes = numberOfVotesPerOption.sorted(by: { $0.1 < $1.1 })
         
         
         // Continue looping until we find he most popular (last) option that individually has a
         // higher number of votes than all options after it.
-        while optionsSortedByVotes.removeLast().1 <= optionsSortedByVotes.reduce(0, combine: { $0 + $1.1 }) {
+        while optionsSortedByVotes.removeLast().1 <= optionsSortedByVotes.reduce(0, { $0 + $1.1 }) {
             continue
         }
 

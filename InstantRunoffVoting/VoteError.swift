@@ -1,4 +1,4 @@
-public enum VoteError: ErrorProtocol {
+public enum VoteError: Error {
     case noPreferencesInVote
     case optionPreferredMoreThanOnceInVote
     case votesAlreadyCounted
