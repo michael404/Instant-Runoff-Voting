@@ -31,7 +31,7 @@ public struct Vote<Option: Votable> {
 extension Vote: CustomStringConvertible {
     
     public var description: String {
-        return self.preferences.map({ $0.description }).joined(separator: ">")
+        return self.preferences.lazy.map({ $0.description }).joined(separator: ">")
     }
     
 }
