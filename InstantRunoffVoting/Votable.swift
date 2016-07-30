@@ -1,3 +1,1 @@
-public protocol Votable: Equatable, Hashable, CustomStringConvertible {
-    
-}
+public typealias Votable = Equatable & Hashable & CustomStringConvertible

@@ -1,6 +1,6 @@
 public struct Vote<Option: Votable> {
     
-    private let preferences: [Option]
+    fileprivate let preferences: [Option]
     
     private var index: Array<Option>.Index
     

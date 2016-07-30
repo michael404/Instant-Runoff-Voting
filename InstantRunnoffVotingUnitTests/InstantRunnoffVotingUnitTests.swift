@@ -1,11 +1,5 @@
 import XCTest
 
-extension String: Votable {
-    public var description: String {
-        return self
-    }
-}
-
 class InstantRunnoffVotingUnitTests: XCTestCase {
     
     enum TestOptions: String, Votable {

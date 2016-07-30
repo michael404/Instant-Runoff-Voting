@@ -1,6 +1,6 @@
 public struct VoteCounter<Option: Votable> {
     
-    private var voteCountingRounds: [VoteCountingRound<Option>]
+    fileprivate var voteCountingRounds: [VoteCountingRound<Option>]
     
     /// The winning option of the vote
     let winner: Option

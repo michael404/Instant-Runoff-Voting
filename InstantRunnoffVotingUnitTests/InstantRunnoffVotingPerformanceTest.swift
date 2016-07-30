@@ -1,8 +1,5 @@
 import XCTest
 
-extension Int: Votable {
-}
-
 class InstantRunnoffVotingPerformanceTest: XCTestCase {
     
     enum TestOptions: String, Votable {
