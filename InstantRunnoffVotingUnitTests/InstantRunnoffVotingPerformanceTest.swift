@@ -103,5 +103,40 @@ class InstantRunnoffVotingPerformanceTest: XCTestCase {
         
     }
     
+    func testPerformanceOfVoteDescription() {
+        
+        var votes: [Vote<TestOptions>] = []
+        
+        let performanceFactor = 300
+        
+        do {
+            for _ in 1...(7 * performanceFactor) {
+                votes.append(try Vote(preferences: [.AltA, .AltC, .AltF, .AltB]))
+            }
+            for _ in 1...(6 * performanceFactor) {
+                votes.append(try Vote(preferences: [.AltB]))
+            }
+            for _ in 1...(5 * performanceFactor) {
+                votes.append(try Vote(preferences: [.AltC]))
+            }
+            for _ in 1...(4 * performanceFactor) {
+                votes.append(try Vote(preferences: [.AltD, .AltE, .AltF]))
+            }
+            for _ in 1...(2 * performanceFactor) {
+                votes.append(try Vote(preferences: [.AltE, .AltA, .AltD]))
+            }
+            for _ in 1...(1 * performanceFactor) {
+                votes.append(try Vote(preferences: [.AltF, .AltB, .AltC]))
+            }
+        } catch {
+            XCTFail("Failed to create votes")
+        }
+        
+        self.measure {
+            for vote in votes {
+                let _ = vote.description
+            }
+        }
+    }
     
 }
