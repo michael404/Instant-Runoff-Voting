@@ -1,6 +1,6 @@
 internal struct VoteCountingRound<Option: Votable> {
     
-    internal typealias Votes = [Vote<Option>]
+    internal typealias Votes = [VoteIterator<Option>]
     
     internal private(set) var voteCount: [Option: Votes]
     
@@ -8,7 +8,6 @@ internal struct VoteCountingRound<Option: Votable> {
         return voteCount.reduce(0, { $0 + $1.1.count })
     }
     
-    // TODO: This should return a set, but that seems to impact performance for now
     var allOptions: [Option] {
         return Array(voteCount.keys)
     }
@@ -33,15 +32,16 @@ internal struct VoteCountingRound<Option: Votable> {
     /// All options will be added to the vote count, since no votes are eliminated
     init(fromUncountedBallot ballot: [Vote<Option>]) {
         
-        voteCount = [:]
-        for var vote in ballot {
+        self.voteCount = [:]
+        for var vote in ballot.map({ $0.makeIterator() }) {
             
             // Discard votes that do not have any preferences
             if let preference = vote.next() {
                 
                 // Add vote to array or initialize array if is not allready initialized
-                if voteCount[preference]?.append(vote) == nil {
-                    voteCount[preference] = [vote]
+                // TODO: Make an extention to dictionary where Value == Array to append or initialize array
+                if self.voteCount[preference]?.append(vote) == nil {
+                    self.voteCount[preference] = [vote]
                 }
             }
         }
@@ -88,7 +88,7 @@ internal struct VoteCountingRound<Option: Votable> {
     
     /// Removes votes for the options specified from voteCount and returns an
     /// array of all votes that were removed
-    private mutating func removeVotes(for options: [Option]) -> [Vote<Option>] {
+    private mutating func removeVotes(for options: [Option]) -> Votes {
         return options.flatMap({ self.voteCount.removeValue(forKey: $0)! })
     }
     
@@ -113,10 +113,7 @@ internal struct VoteCountingRound<Option: Votable> {
     }
     
     internal func votes(for option: Option) -> Votes {
-        if let votes = voteCount[option] {
-            return votes
-        }
-        return []
+        return voteCount[option] ?? []
     }
     
 }

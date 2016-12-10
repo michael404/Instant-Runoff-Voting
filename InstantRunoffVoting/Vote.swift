@@ -1,37 +1,51 @@
-public struct Vote<Option: Votable> {
+public typealias Votable = Equatable & Hashable & CustomStringConvertible
+
+public struct Vote<Option: Votable>: Sequence, CustomStringConvertible {
     
     fileprivate let preferences: [Option]
     
-    private var index: Array<Option>.Index
+    public typealias Iterator = VoteIterator<Option>
     
     init(preferences: [Option]) throws {        
         
-        // Check that there is at least one preference
-        guard !preferences.isEmpty else {
-            throw VoteError.noPreferencesInVote
-        }
+        guard !preferences.isEmpty else { throw VoteError.noPreferencesInVote }
         
-        // Check that no option is preferred more than once
-        guard Set(preferences).count == preferences.count else {
-            throw VoteError.optionPreferredMoreThanOnceInVote
-        }
+        guard preferences.hasUniqueElements() else { throw VoteError.optionPreferredMoreThanOnceInVote }
         
         self.preferences = preferences
-        self.index = self.preferences.startIndex
     }
     
-    /// Advance to the next preference and return it, or nil if no next preference exists
-    internal mutating func next() -> Option? {
-        defer { index = preferences.index(after: index) }
-        return index < preferences.endIndex ? preferences[index] : nil
+    public func makeIterator() -> VoteIterator<Option> {
+        return VoteIterator(self)
     }
-    
-}
-
-extension Vote: CustomStringConvertible {
     
     public var description: String {
         return self.preferences.lazy.map({ $0.description }).joined(separator: ">")
     }
     
 }
+
+public struct VoteIterator<Option: Votable>: IteratorProtocol, CustomStringConvertible {
+    
+    fileprivate let vote: Vote<Option>
+    
+    private var index: Array<Option>.Index = 0
+    
+    fileprivate init(_ vote: Vote<Option>) {
+        self.vote = vote
+    }
+    
+    /// Advance to the next preference and return it, or nil if no next preference exists
+    mutating public func next() -> Option? {
+        defer {
+            self.index = self.vote.preferences.index(after: self.index)
+        }
+        return self.index < self.vote.preferences.endIndex ? self.vote.preferences[index] : nil
+    }
+    
+    public var description: String {
+        return self.vote.description
+    }
+    
+}
+
