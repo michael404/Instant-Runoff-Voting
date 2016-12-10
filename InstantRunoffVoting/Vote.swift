@@ -37,9 +37,7 @@ public struct VoteIterator<Option: Votable>: IteratorProtocol, CustomStringConve
     
     /// Advance to the next preference and return it, or nil if no next preference exists
     mutating public func next() -> Option? {
-        defer {
-            self.index = self.vote.preferences.index(after: self.index)
-        }
+        defer { self.index += 1 }
         return self.index < self.vote.preferences.endIndex ? self.vote.preferences[index] : nil
     }
     
