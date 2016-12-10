@@ -3,9 +3,7 @@ public typealias Votable = Equatable & Hashable & CustomStringConvertible
 public struct Vote<Option: Votable>: Sequence, CustomStringConvertible {
     
     fileprivate let preferences: [Option]
-    
-    public typealias Iterator = VoteIterator<Option>
-    
+        
     init(preferences: [Option]) throws {        
         
         guard !preferences.isEmpty else { throw VoteError.noPreferencesInVote }
