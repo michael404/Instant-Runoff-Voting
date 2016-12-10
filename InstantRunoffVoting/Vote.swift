@@ -29,7 +29,7 @@ public struct VoteIterator<Option: Votable>: IteratorProtocol, CustomStringConve
     
     fileprivate let vote: Vote<Option>
     
-    private var index: Array<Option>.Index = 0
+    private var index: Array.Index = 0
     
     fileprivate init(_ vote: Vote<Option>) {
         self.vote = vote
