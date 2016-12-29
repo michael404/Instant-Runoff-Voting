@@ -6,7 +6,7 @@ public struct Vote<Option: Votable>: Sequence, CustomStringConvertible {
     
     init(preferences: [Option]) throws {
         guard !preferences.isEmpty else { throw VoteError.noPreferencesInVote }
-        guard preferences.hasUniqueElements() else { throw VoteError.optionPreferredMoreThanOnceInVote }
+        guard preferences.containsOnlyUniqueElements() else { throw VoteError.optionPreferredMoreThanOnceInVote }
         self.preferences = preferences
     }
     
