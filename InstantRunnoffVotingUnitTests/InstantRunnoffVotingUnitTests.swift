@@ -334,7 +334,7 @@ class InstantRunnoffVotingUnitTests: XCTestCase {
             let _ =
             try Vote(preferences: [TestOptions.AltB, .AltB])
         } catch let e as VoteError {
-            XCTAssertEqual(e, VoteError.optionPreferredMoreThanOnceInVote)
+            XCTAssertEqual(e, VoteError.duplicatePreferencesInVote)
         } catch {
             XCTFail("testVoteRepeatedOptions threw wrong error type")
         }

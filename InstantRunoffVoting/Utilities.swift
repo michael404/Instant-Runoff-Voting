@@ -1,6 +1,6 @@
 public enum VoteError: Error {
     case noPreferencesInVote
-    case optionPreferredMoreThanOnceInVote
+    case duplicatePreferencesInVote
     case votesAlreadyCounted
     case unresolvableTie
 }
