@@ -3,26 +3,8 @@ import XCTest
 class InstantRunnoffVotingUnitTests: XCTestCase {
     
     enum TestOptions: String, Votable {
-        case AltA = "A"
-        case AltB = "B"
-        case AltC = "C"
-        case AltD = "D"
-        case AltE = "E"
-        case AltF = "F"
-        
-        var description: String {
-            return self.rawValue
-        }
-    }
-    
-    override func setUp() {
-        super.setUp()
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-    }
-    
-    override func tearDown() {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-        super.tearDown()
+        case AltA = "A", AltB = "B", AltC = "C", AltD = "D", AltE = "E", AltF = "F"
+        var description: String { return self.rawValue }
     }
     
     func testOneRoundVote() {

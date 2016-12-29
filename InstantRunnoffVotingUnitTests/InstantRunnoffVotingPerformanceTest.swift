@@ -3,16 +3,8 @@ import XCTest
 class InstantRunnoffVotingPerformanceTest: XCTestCase {
     
     enum TestOptions: String, Votable {
-        case AltA = "A"
-        case AltB = "B"
-        case AltC = "C"
-        case AltD = "D"
-        case AltE = "E"
-        case AltF = "F"
-        
-        var description: String {
-            return self.rawValue
-        }
+        case AltA = "A", AltB = "B", AltC = "C", AltD = "D", AltE = "E", AltF = "F"
+        var description: String { return self.rawValue }
     }
     
     func testPerformanceOfFourRoundVote() {
@@ -45,8 +37,7 @@ class InstantRunnoffVotingPerformanceTest: XCTestCase {
         }
         
         self.measure {
-            let voteCounter = try! VoteCounter(ballot: votes)
-            let _ = voteCounter.results
+            withExtendedLifetime(try! VoteCounter(ballot: votes)) { }
         }
     }
     
@@ -65,8 +56,7 @@ class InstantRunnoffVotingPerformanceTest: XCTestCase {
         }
         
         self.measure {
-            let voteCounter = try! VoteCounter(ballot: votes)
-            let _ = voteCounter.results
+            withExtendedLifetime(try! VoteCounter(ballot: votes).results) { }
         }
     }
     
@@ -99,16 +89,12 @@ class InstantRunnoffVotingPerformanceTest: XCTestCase {
             } catch {
                 XCTFail("Failed to create votes")
             }
+            withExtendedLifetime(votes) { }
         }
         
     }
     
     func testPerformanceOfVoteDescription() {
-        
-        @inline(never)
-        func voteDescription(vote: Vote<TestOptions>) -> String {
-            return vote.description
-        }
         
         var votes: [Vote<TestOptions>] = []
         
@@ -139,7 +125,7 @@ class InstantRunnoffVotingPerformanceTest: XCTestCase {
         
         self.measure {
             for vote in votes {
-                let _ = voteDescription(vote: vote)
+                withExtendedLifetime(vote.description) { }
             }
         }
     }

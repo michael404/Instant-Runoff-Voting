@@ -1,31 +1,21 @@
-internal struct VoteCountingRound<Option: Votable> {
+struct VoteCountingRound<Option: Votable> {
     
-    internal typealias Votes = [VoteIterator<Option>]
+    typealias Votes = [VoteIterator<Option>]
     
-    internal private(set) var voteCount: [Option: Votes]
+    private(set) var voteCount: [Option: Votes]
+    
+    private(set) var eliminatedOptions: [Option] = []
     
     var totalVotes: Int {
-        return voteCount.reduce(0, { $0 + $1.1.count })
+        return voteCount.reduce(0) { $0 + $1.1.count }
     }
     
     var allOptions: [Option] {
         return Array(voteCount.keys)
     }
     
-    var eliminatedOptions: [Option] = []
-    
     var numberOfVotesPerOption: [Option: Int] {
-        
-        // TODO: If this proposal gets included in Swift:
-        // https://github.com/apple/swift-evolution/blob/master/proposals/0100-add-sequence-based-init-and-merge-to-dictionary.md
-        // ...this can be changed to:
-        // return Dictionary(voteCount.map({ $0, $1.count }))!
-        
-        var numberOfVotesPerOption: [Option: Int] = [:]
-        for (option, votes) in voteCount {
-            numberOfVotesPerOption[option] = votes.count
-        }
-        return numberOfVotesPerOption
+        return Dictionary(voteCount.map { ($0, $1.count) } )!
     }
     
     /// Initialize from an uncounted ballot.
@@ -39,7 +29,7 @@ internal struct VoteCountingRound<Option: Votable> {
             if let preference = vote.next() {
                 
                 // Add vote to array or initialize array if is not allready initialized
-                // TODO: Make an extention to dictionary where Value == Array to append or initialize array
+                // TODO: Make an extension to dictionary where Value == Array to append or initialize array
                 if self.voteCount[preference]?.append(vote) == nil {
                     self.voteCount[preference] = [vote]
                 }
@@ -98,21 +88,19 @@ internal struct VoteCountingRound<Option: Votable> {
         for var vote in votes {
             while let preference = vote.next() {
                 // Only add votes to options that are still valid in this round
-                if voteCount[preference]?.append(vote) != nil {
-                    break
-                }
+                guard voteCount[preference]?.append(vote) == nil else { break }
             }
         }
     }
     
     /// Checks if there is an option that has more than 50% of the votes and returns that
     /// option or nil if it does not exist
-    internal func optionWithMajority() -> Option? {
+    func optionWithMajority() -> Option? {
         let votesNeededForMajority = self.totalVotes / 2
         return voteCount.first(where: { $0.1.count > votesNeededForMajority })?.0
     }
     
-    internal func votes(for option: Option) -> Votes {
+    func votes(for option: Option) -> Votes {
         return voteCount[option] ?? []
     }
     
