@@ -23,7 +23,7 @@ public struct VoteCounter<Option: Votable> {
         while let voteCountingRound = voteCountingRounds.last, voteCountingRound.optionWithMajority() == nil {
             voteCountingRounds.append(try VoteCountingRound(fromPreviousRound: voteCountingRound))
         }
-
+        
         self.winner = voteCountingRounds.last!.optionWithMajority()!
     }
 }

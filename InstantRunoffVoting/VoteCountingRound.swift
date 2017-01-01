@@ -10,8 +10,8 @@ struct VoteCountingRound<Option: Votable> {
         return voteCount.reduce(0) { $0 + $1.1.count }
     }
     
-    var allOptions: [Option] {
-        return Array(voteCount.keys)
+    var allOptions: LazyMapCollection<Dictionary<Option, Votes>, Option> {
+        return voteCount.keys
     }
     
     var numberOfVotesPerOption: [Option: Int] {

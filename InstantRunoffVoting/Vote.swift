@@ -26,9 +26,7 @@ public struct VoteIterator<Option: Votable>: IteratorProtocol, CustomStringConve
     
     private var index: Array.Index = 0
     
-    fileprivate init(_ vote: Vote<Option>) {
-        self.vote = vote
-    }
+    fileprivate init(_ vote: Vote<Option>) { self.vote = vote }
     
     /// Advance to the next preference and return it, or nil if no next preference exists
     mutating public func next() -> Option? {
