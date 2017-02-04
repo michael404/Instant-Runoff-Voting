@@ -265,18 +265,20 @@ class InstantRunnoffVotingUnitTests: XCTestCase {
             XCTFail("Failed to create votes")
         }
         
-        // Testing this in two steps. First "try?" to make sure that this fails, and
-        // then a do/try/catch-clause to make sure it returns the correct error
+        // Testing this in two steps. First XCTAssertThrowsError to make sure that it
+        // thorws, and then a do/try/catch-clause to make sure it returns the correct error
         
-        XCTAssertNil(try? VoteCounter(ballot: votes))
+        XCTAssertThrowsError(try VoteCounter(ballot: votes))
         
         do {
-            let _ = try VoteCounter(ballot: votes)
+            _ = try VoteCounter(ballot: votes)
         } catch let e as VoteError {
             XCTAssertEqual(e, VoteError.unresolvableTie)
         } catch {
             XCTFail("Unresolvable tie threw wrong error type")
         }
+        
+        
         
     }
     
@@ -292,13 +294,13 @@ class InstantRunnoffVotingUnitTests: XCTestCase {
             XCTFail("Failed to create votes")
         }
         
-        // Testing this in two steps. First "try?" to make sure that this fails, and
-        // then a do/try/catch-clause to make sure it returns the correct error
+        // Testing this in two steps. First XCTAssertThrowsError to make sure that it
+        // thorws, and then a do/try/catch-clause to make sure it returns the correct error
         
-        XCTAssertNil(try? VoteCounter(ballot: votes))
+        XCTAssertThrowsError(try VoteCounter(ballot: votes))
         
         do {
-            let _ = try VoteCounter(ballot: votes)
+            _ = try VoteCounter(ballot: votes)
         } catch let e as VoteError {
             XCTAssertEqual(e, VoteError.unresolvableTie)
         } catch {
@@ -308,13 +310,13 @@ class InstantRunnoffVotingUnitTests: XCTestCase {
     
     func testVoteWithNoOptions() {
         
-        // Testing this in two steps. First "try?" to make sure that this fails, and
-        // then a do/try/catch-clause to make sure it returns the correct error
+        // Testing this in two steps. First XCTAssertThrowsError to make sure that it
+        // thorws, and then a do/try/catch-clause to make sure it returns the correct error
         
-        XCTAssertNil(try? Vote(preferences: Array<TestOptions>()))
+        XCTAssertThrowsError(try Vote(preferences: Array<TestOptions>()))
         
         do {
-            let _ = try Vote(preferences: Array<TestOptions>())
+            _ = try Vote(preferences: Array<TestOptions>())
         } catch let e as VoteError {
             XCTAssertEqual(e, VoteError.noPreferencesInVote)
         } catch {
@@ -325,14 +327,13 @@ class InstantRunnoffVotingUnitTests: XCTestCase {
     
     func testVoteRepeatedOptions() {
         
-        // Testing this in two steps. First "try?" to make sure that this fails, and
-        // then a do/try/catch-clause to make sure it returns the correct error
+        // Testing this in two steps. First XCTAssertThrowsError to make sure that it
+        // thorws, and then a do/try/catch-clause to make sure it returns the correct error
         
-        XCTAssertNil(try? Vote(preferences: [TestOptions.AltB, .AltB]))
+        XCTAssertThrowsError(try Vote(preferences: [TestOptions.AltB, .AltB]))
 
         do {
-            let _ =
-            try Vote(preferences: [TestOptions.AltB, .AltB])
+            _ = try Vote(preferences: [TestOptions.AltB, .AltB])
         } catch let e as VoteError {
             XCTAssertEqual(e, VoteError.duplicatePreferencesInVote)
         } catch {
