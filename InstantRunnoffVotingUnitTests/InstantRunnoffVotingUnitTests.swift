@@ -2,6 +2,23 @@ import XCTest
 
 class InstantRunnoffVotingUnitTests: XCTestCase {
     
+    /// Testing if expression throws the expected error in two steps. 
+    /// First XCTAssertThrowsError to make sure that it thorws, and then a 
+    /// do/try/catch-clause to make sure it returns the correct error
+    func AssertThrowsExpectedError<T, E: Error & Equatable>(_ expression: @autoclosure () throws -> T, expectedError: E) {
+        
+        XCTAssertThrowsError(try expression())
+        
+        do {
+            _ = try expression()
+        } catch let thrownError as E {
+            XCTAssertEqual(thrownError, expectedError)
+        } catch {
+            XCTFail("Threw wrong error type")
+        }
+        
+    }
+    
     enum TestOptions: String, Votable {
         case AltA = "A", AltB = "B", AltC = "C", AltD = "D", AltE = "E", AltF = "F"
         var description: String { return self.rawValue }
@@ -265,20 +282,7 @@ class InstantRunnoffVotingUnitTests: XCTestCase {
             XCTFail("Failed to create votes")
         }
         
-        // Testing this in two steps. First XCTAssertThrowsError to make sure that it
-        // thorws, and then a do/try/catch-clause to make sure it returns the correct error
-        
-        XCTAssertThrowsError(try VoteCounter(ballot: votes))
-        
-        do {
-            _ = try VoteCounter(ballot: votes)
-        } catch let e as VoteError {
-            XCTAssertEqual(e, VoteError.unresolvableTie)
-        } catch {
-            XCTFail("Unresolvable tie threw wrong error type")
-        }
-        
-        
+        AssertThrowsExpectedError(try VoteCounter(ballot: votes), expectedError: VoteError.unresolvableTie)
         
     }
     
@@ -294,51 +298,19 @@ class InstantRunnoffVotingUnitTests: XCTestCase {
             XCTFail("Failed to create votes")
         }
         
-        // Testing this in two steps. First XCTAssertThrowsError to make sure that it
-        // thorws, and then a do/try/catch-clause to make sure it returns the correct error
+        AssertThrowsExpectedError(try VoteCounter(ballot: votes), expectedError: VoteError.unresolvableTie)
         
-        XCTAssertThrowsError(try VoteCounter(ballot: votes))
-        
-        do {
-            _ = try VoteCounter(ballot: votes)
-        } catch let e as VoteError {
-            XCTAssertEqual(e, VoteError.unresolvableTie)
-        } catch {
-            XCTFail("Unresolvable tie threw wrong error type")
-        }
     }
     
     func testVoteWithNoOptions() {
         
-        // Testing this in two steps. First XCTAssertThrowsError to make sure that it
-        // thorws, and then a do/try/catch-clause to make sure it returns the correct error
-        
-        XCTAssertThrowsError(try Vote(preferences: Array<TestOptions>()))
-        
-        do {
-            _ = try Vote(preferences: Array<TestOptions>())
-        } catch let e as VoteError {
-            XCTAssertEqual(e, VoteError.noPreferencesInVote)
-        } catch {
-            XCTFail("testVoteWithNoOptions threw wrong error type")
-        }
+        AssertThrowsExpectedError(try Vote(preferences: Array<TestOptions>()), expectedError: VoteError.noPreferencesInVote)
         
     }
     
     func testVoteRepeatedOptions() {
         
-        // Testing this in two steps. First XCTAssertThrowsError to make sure that it
-        // thorws, and then a do/try/catch-clause to make sure it returns the correct error
-        
-        XCTAssertThrowsError(try Vote(preferences: [TestOptions.AltB, .AltB]))
-
-        do {
-            _ = try Vote(preferences: [TestOptions.AltB, .AltB])
-        } catch let e as VoteError {
-            XCTAssertEqual(e, VoteError.duplicatePreferencesInVote)
-        } catch {
-            XCTFail("testVoteRepeatedOptions threw wrong error type")
-        }
+        AssertThrowsExpectedError(try Vote(preferences: [TestOptions.AltB, .AltB]), expectedError: VoteError.duplicatePreferencesInVote)
         
     }
     
