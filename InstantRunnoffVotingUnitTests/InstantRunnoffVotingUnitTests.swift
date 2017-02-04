@@ -5,16 +5,17 @@ class InstantRunnoffVotingUnitTests: XCTestCase {
     /// Testing if expression throws the expected error in two steps. 
     /// First XCTAssertThrowsError to make sure that it thorws, and then a 
     /// do/try/catch-clause to make sure it returns the correct error
-    func AssertThrowsExpectedError<T, E: Error & Equatable>(_ expression: @autoclosure () throws -> T, expectedError: E) {
+    func AssertThrowsExpectedError<T, E: Error & Equatable>(
+        _ expression: @autoclosure () throws -> T, expectedError: E, file: StaticString = #file, line: UInt = #line) {
         
-        XCTAssertThrowsError(try expression())
+        XCTAssertThrowsError(try expression(), file: file, line: line)
         
         do {
             _ = try expression()
         } catch let thrownError as E {
-            XCTAssertEqual(thrownError, expectedError)
+            XCTAssertEqual(thrownError, expectedError, file: file, line: line)
         } catch {
-            XCTFail("Threw wrong error type")
+            XCTFail("Threw wrong error type", file: file, line: line)
         }
         
     }
