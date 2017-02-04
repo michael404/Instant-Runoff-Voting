@@ -7,7 +7,7 @@ public enum VoteError: Error {
 
 extension Array where Iterator.Element: Hashable {
     
-    func containsOnlyUniqueElements() -> Bool {
+    func elementsAreUnique() -> Bool {
         return Set(self).count == self.count
     }
     
