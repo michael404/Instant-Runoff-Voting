@@ -15,6 +15,21 @@ extension Array where Iterator.Element: Hashable {
 
 extension Dictionary {
     
+    /// Accesses the value associated with the given key for reading and writing.
+    /// Uses a default value if the key does not exist in the dictionary.
+    ///
+    /// - Parameters:
+    ///   - key: The key to look up.
+    ///   - defaultValue: The value to use if the dictionary does not contain the key.
+    subscript(key: Key, or defaultValue: Value) -> Value {
+        get {
+            return self[key] ?? defaultValue
+        }
+        set {
+            self[key] = newValue
+        }
+    }
+    
     // TODO: If this proposal gets included in Swift:
     // https://github.com/apple/swift-evolution/blob/master/proposals/0100-add-sequence-based-init-and-merge-to-dictionary.md
     // this helper init can be removed.

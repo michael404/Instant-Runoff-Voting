@@ -29,10 +29,7 @@ struct VoteCountingRound<Option: Votable> {
             if let preference = vote.next() {
                 
                 // Add vote to array or initialize array if is not allready initialized
-                // TODO: Make an extension to dictionary where Value == Array to append or initialize array
-                if self.voteCount[preference]?.append(vote) == nil {
-                    self.voteCount[preference] = [vote]
-                }
+                self.voteCount[preference, or: []].append(vote)
             }
         }
     }
