@@ -7,7 +7,9 @@ struct VoteCountingRound<Option: Votable> {
     private(set) var eliminatedOptions: [Option] = []
     
     var totalVotes: Int {
-        return voteCount.reduce(0) { $0 + $1.1.count }
+        return voteCount.reduce(0) { result, voteCount in
+            result + voteCount.value.count
+        }
     }
     
     var allOptions: LazyMapCollection<Dictionary<Option, Votes>, Option> {
@@ -15,7 +17,9 @@ struct VoteCountingRound<Option: Votable> {
     }
     
     var numberOfVotesPerOption: [Option: Int] {
-        return Dictionary(voteCount.map { ($0, $1.count) } )!
+        return Dictionary(voteCount.map { option, votes in
+            return (option, votes.count)
+        } )!
     }
     
     /// Initialize from an uncounted ballot.
@@ -59,24 +63,30 @@ struct VoteCountingRound<Option: Votable> {
         
         // Sort options by popularity (from least popular to most popular), so that they can
         // be eliminated one by one.
-        var optionsSortedByVotes = numberOfVotesPerOption.sorted(by: { $0.1 < $1.1 })
+        var optionsSortedByVotes = numberOfVotesPerOption.sorted(by: { lhs, rhs in
+            return lhs.value < rhs.value
+        } )
         
         
         // Continue looping until we find he most popular (last) option that individually has a
         // higher number of votes than all options after it.
-        while optionsSortedByVotes.removeLast().1 <= optionsSortedByVotes.reduce(0, { $0 + $1.1 }) {
+        while optionsSortedByVotes.removeLast().1 <= optionsSortedByVotes.reduce(0, { result, voteCount in
+            return result + voteCount.value
+        } ) {
             continue
         }
 
         // We have found that option, and can therefore return every option
         // that is less popular than this
-        return optionsSortedByVotes.flatMap({ $0.0 })
+        return optionsSortedByVotes.flatMap({ $0.key })
     }
     
     /// Removes votes for the options specified from voteCount and returns an
     /// array of all votes that were removed
     private mutating func removeVotes(for options: [Option]) -> Votes {
-        return options.flatMap({ self.voteCount.removeValue(forKey: $0)! })
+        return options.flatMap({ option in
+            self.voteCount.removeValue(forKey: option)!
+        } )
     }
     
     /// Redistributes votes to the next preference that is stil valid, if
@@ -94,7 +104,9 @@ struct VoteCountingRound<Option: Votable> {
     /// option or nil if it does not exist
     func optionWithMajority() -> Option? {
         let votesNeededForMajority = self.totalVotes / 2
-        return voteCount.first(where: { $0.1.count > votesNeededForMajority })?.0
+        return voteCount.first(where: { voteCount in
+            voteCount.value.count > votesNeededForMajority
+        } )?.key
     }
     
     func votes(for option: Option) -> Votes {
