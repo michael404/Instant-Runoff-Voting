@@ -15,13 +15,17 @@ extension Array where Iterator.Element: Hashable {
 
 extension Dictionary {
     
-    /// Accesses the value associated with the given key for reading and writing.
-    /// Uses a default value if the key does not exist in the dictionary.
+    // TODO: If this proposal gets included in Swift:
+    // https://github.com/apple/swift-evolution/blob/master/proposals/0165-dict.md
+    // this helper subscript can be removed.
+    //
+    /// Accesses the element with the given key, or the specified default value,
+    /// if the dictionary doesn't contain the given key.
     ///
     /// - Parameters:
     ///   - key: The key to look up.
     ///   - defaultValue: The value to use if the dictionary does not contain the key.
-    subscript(key: Key, or defaultValue: Value) -> Value {
+    subscript(key: Key, default defaultValue: Value) -> Value {
         get {
             return self[key] ?? defaultValue
         }
@@ -31,23 +35,43 @@ extension Dictionary {
     }
     
     // TODO: If this proposal gets included in Swift:
-    // https://github.com/apple/swift-evolution/blob/master/proposals/0100-add-sequence-based-init-and-merge-to-dictionary.md
+    // https://github.com/apple/swift-evolution/blob/master/proposals/0165-dict.md
     // this helper init can be removed.
     //
     /// Creates a new dictionary using the key/value pairs in the given
     /// sequence.
     ///
-    /// If the given sequence has any duplicate keys, the result is `nil`.
+    /// If the given sequence has any duplicate keys, the initialization
+    /// traps with a fatalError().
     ///
     /// - Parameter sequence:  A sequence of `(Key, Value)` tuples, where
     ///   the type `Key` conforms to the `Hashable` protocol.
     /// - Returns: A new dictionary initialized with the elements of
-    ///   `sequence` if all keys are unique; otherwise, `nil`.
-    init?<S: Sequence>(_ sequence: S) where S.Iterator.Element == (Key, Value) {
+    ///   `sequence` if all keys are unique.
+    init<S: Sequence>(_ sequence: S) where S.Iterator.Element == (Key, Value) {
         self = Dictionary(minimumCapacity: sequence.underestimatedCount)
         for (key, value) in sequence {
-            guard self.updateValue(value, forKey: key) == nil else { return nil }
+            guard self.updateValue(value, forKey: key) == nil else { fatalError() }
         }
+    }
+    
+}
+
+extension Sequence {
+    
+    func sum(countingElementsBy counting: (Iterator.Element) -> Int) -> Int {
+        return self.reduce(0) { result, item in
+            return result + counting(item)
+        }
+    }
+    
+}
+
+//TODO: This should be generic over one of the new Swift 4 integer protocols
+extension Sequence where Iterator.Element == Int {
+    
+    var sum: Int {
+        return self.reduce(0, +)
     }
     
 }
