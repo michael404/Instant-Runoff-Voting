@@ -28,13 +28,8 @@ struct VoteCountingRound<Option: Votable> {
         
         self.voteCount = [:]
         for var vote in ballot.map({ $0.makeIterator() }) {
-            
-            // Discard votes that do not have any preferences
-            if let preference = vote.next() {
-                
-                // Add vote to array or initialize array if is not allready initialized
-                self.voteCount[preference, default: []].append(vote)
-            }
+            guard let preference = vote.next() else { continue }
+            self.voteCount[preference, default: []].append(vote)
         }
     }
     

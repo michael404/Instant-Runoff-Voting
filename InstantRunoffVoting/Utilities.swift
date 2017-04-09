@@ -25,9 +25,9 @@ extension Dictionary {
     /// - Parameters:
     ///   - key: The key to look up.
     ///   - defaultValue: The value to use if the dictionary does not contain the key.
-    subscript(key: Key, default defaultValue: Value) -> Value {
+    subscript(key: Key, default defaultValue: @autoclosure () -> Value) -> Value {
         get {
-            return self[key] ?? defaultValue
+            return self[key] ?? defaultValue()
         }
         set {
             self[key] = newValue
@@ -59,6 +59,11 @@ extension Dictionary {
 
 extension Sequence {
     
+    /// Calculate the sum of the elements in the sequence,
+    /// calculating the `Int` value of each element by the closure
+    ///
+    /// - Parameter counting: the closure to use to calculate the value of each element
+    /// - Returns: the sum of the sequence
     func sum(countingElementsBy counting: (Iterator.Element) -> Int) -> Int {
         return self.reduce(0) { result, item in
             return result + counting(item)
@@ -70,8 +75,11 @@ extension Sequence {
 //TODO: This should be generic over one of the new Swift 4 integer protocols
 extension Sequence where Iterator.Element == Int {
     
+    /// The sum of the `Int` elements in the sequence
     var sum: Int {
         return self.reduce(0, +)
     }
     
 }
+
+
