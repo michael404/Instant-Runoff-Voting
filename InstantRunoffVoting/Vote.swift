@@ -24,14 +24,14 @@ public struct VoteIterator<Option: Votable>: IteratorProtocol, CustomStringConve
     
     private let vote: Vote<Option>
     
-    private var index: Array.Index = 0
+    private var index: Int = 0
     
     fileprivate init(_ vote: Vote<Option>) { self.vote = vote }
     
     /// Advance to the next preference and return it, or nil if no next preference exists
     mutating public func next() -> Option? {
-        defer { self.index += 1 }
         guard self.index < self.vote.preferences.endIndex else { return nil }
+        defer { self.index += 1 }
         return self.vote.preferences[self.index]
     }
     
