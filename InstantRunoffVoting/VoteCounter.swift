@@ -36,14 +36,12 @@ extension VoteCounter: CustomStringConvertible {
         
         desc += ("Number of votes in uncounted ballot: \(voteCountingRounds[0].totalVotes)\n")
         
-        for (round, voteCountingRound) in voteCountingRounds.enumerated() {
+        for round in voteCountingRounds.indices {
             desc += "\nRound \(round)\n"
             
             if round > 0 {
-
-                desc += "\(voteCountingRound.eliminatedOptions.count) option(s) were eliminated in the round\n"
-                
-                for eliminatedOption in voteCountingRound.eliminatedOptions {
+                desc += "\(voteCountingRounds[round].eliminatedOptions.count) option(s) were eliminated in the round\n"
+                for eliminatedOption in voteCountingRounds[round].eliminatedOptions {
                     desc += "Option to eliminate: \(eliminatedOption)\n"
                     for voteToRedistribute in voteCountingRounds[round - 1].votes(for: eliminatedOption) {
                         desc += " - Resorting vote: \(voteToRedistribute)\n"
@@ -51,19 +49,19 @@ extension VoteCounter: CustomStringConvertible {
                 }
             }
             
-            desc += "Number of valid votes in this round: \(voteCountingRound.totalVotes)\n"
+            desc += "Number of valid votes in this round: \(voteCountingRounds[round].totalVotes)\n"
             
             desc += "Current count: "
-            for (option, vote) in voteCountingRound.voteCount {
+            for (option, vote) in voteCountingRounds[round].voteCount {
                 desc += "\(option): \(vote.count), "
             }
             
             desc += "\nCurrent distribution:\n"
-            for (option, vote) in voteCountingRound.voteCount {
+            for (option, vote) in voteCountingRounds[round].voteCount {
                 desc += " - \(option): \(vote)\n"
             }
             
-            if let winner = voteCountingRound.optionWithMajority() {
+            if let winner = voteCountingRounds[round].optionWithMajority() {
                 desc += "Found winner: \(winner)\n\n"
             } else {
                 desc += "No winner found in this round, moving on to next\n\n"

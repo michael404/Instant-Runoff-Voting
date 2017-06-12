@@ -17,9 +17,9 @@ struct VoteCountingRound<Option: Votable> {
     }
     
     var numberOfVotesPerOption: [Option: Int] {
-        return Dictionary(voteCount.map { option, votes in
-            return (option, votes.count)
-        })
+        return voteCount.mapValues { votes in
+            return votes.count
+        }
     }
     
     /// Initialize from an uncounted ballot.
@@ -97,7 +97,7 @@ struct VoteCountingRound<Option: Votable> {
     /// option or nil if it does not exist
     func optionWithMajority() -> Option? {
         let votesNeededForMajority = self.totalVotes / 2
-        return voteCount.first() { voteCount in
+        return voteCount.first { voteCount in
             voteCount.value.count > votesNeededForMajority
         }?.key
     }
