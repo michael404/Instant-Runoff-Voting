@@ -15,9 +15,7 @@ struct VoteCountingRound<Option: Votable> {
     }
     
     var numberOfVotesPerOption: [Option: Int] {
-        return voteCount.mapValues { votes in
-            return votes.count
-        }
+        return voteCount.mapValues { $0.count }
     }
     
     /// Initialize from an uncounted ballot.
