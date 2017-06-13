@@ -21,8 +21,6 @@ extension Array where Element: Hashable {
     
 }
 
-// TODO: Change all Iterator.Element to Element when that change lands on the Swift 4 snapshot build
-
 extension Sequence {
     
     /// Calculate the sum of the elements in the sequence,
@@ -30,7 +28,7 @@ extension Sequence {
     ///
     /// - Parameter counting: the closure to use to calculate the value of each element
     /// - Returns: the sum of the sequence
-    func sum<N: Numeric>(countingElementsBy counting: (Iterator.Element) -> N) -> N {
+    func sum<N: Numeric>(countingElementsBy counting: (Element) -> N) -> N {
         return self.reduce(0 as N) { result, item in
             return result + counting(item)
         }
@@ -38,10 +36,10 @@ extension Sequence {
     
 }
 
-extension Sequence where Iterator.Element: Numeric {
+extension Sequence where Element: Numeric {
     
     /// The sum of the elements in the sequence
-    var sum: Iterator.Element {
+    var sum: Element {
         return self.reduce(0, +)
     }
     
