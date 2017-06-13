@@ -82,9 +82,9 @@ struct VoteCountingRound<Option: Votable> {
     /// that is available. Discards votes that do no longer have valid preferences.
     private mutating func redistribute(votes: Votes) {
         for var vote in votes {
-            while let preference = vote.next() {
+            while let nextRankedVote = vote.next() {
                 // Only add votes to options that are still valid in this round
-                guard voteCount[preference]?.append(vote) == nil else { break }
+                guard voteCount[nextRankedVote]?.append(vote) == nil else { break }
             }
         }
     }

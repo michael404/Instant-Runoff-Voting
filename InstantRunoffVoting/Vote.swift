@@ -2,12 +2,12 @@ public typealias Votable = Equatable & Hashable & CustomStringConvertible
 
 public struct Vote<Option: Votable>: Sequence, CustomStringConvertible {
     
-    fileprivate let preferences: [Option]
+    fileprivate let rankedVotes: [Option]
     
     init(preferences: [Option]) throws {
         guard !preferences.isEmpty else { throw VoteError.noPreferencesInVote }
         guard preferences.elementsAreUnique() else { throw VoteError.duplicatePreferencesInVote }
-        self.preferences = preferences
+        self.rankedVotes = preferences
     }
     
     public func makeIterator() -> VoteIterator<Option> {
@@ -15,7 +15,7 @@ public struct Vote<Option: Votable>: Sequence, CustomStringConvertible {
     }
     
     public var description: String {
-        return self.preferences.lazy.map({ $0.description }).joined(separator: ">")
+        return self.rankedVotes.lazy.map({ $0.description }).joined(separator: ">")
     }
     
 }
@@ -30,9 +30,9 @@ public struct VoteIterator<Option: Votable>: IteratorProtocol, CustomStringConve
     
     /// Advance to the next preference and return it, or nil if no next preference exists
     mutating public func next() -> Option? {
-        guard self.index < self.vote.preferences.endIndex else { return nil }
+        guard self.index < self.vote.rankedVotes.endIndex else { return nil }
         defer { self.index += 1 }
-        return self.vote.preferences[self.index]
+        return self.vote.rankedVotes[self.index]
     }
     
     public var description: String {
