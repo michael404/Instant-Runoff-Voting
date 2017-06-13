@@ -10,10 +10,8 @@ struct VoteCountingRound<Option: Votable> {
         return voteCount.sum { $0.value.count }
     }
     
-    //TODO: This should be changed to a Dictionary.Values in Swift 4
-    //https://github.com/apple/swift-evolution/blob/master/proposals/0154-dictionary-key-and-value-collections.md
-    var allOptions: AnyCollection<Option> {
-        return AnyCollection(voteCount.keys)
+    var allOptions: Dictionary<Option, Votes>.Keys {
+        return voteCount.keys
     }
     
     var numberOfVotesPerOption: [Option: Int] {
