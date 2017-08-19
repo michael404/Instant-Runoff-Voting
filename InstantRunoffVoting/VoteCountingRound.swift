@@ -1,6 +1,6 @@
 struct VoteCountingRound<Option: Votable> {
     
-    typealias Votes = [VoteIterator<Option>]
+    typealias Votes = [Vote<Option>]
     
     private(set) var voteCount: [Option: Votes]
     
@@ -21,12 +21,7 @@ struct VoteCountingRound<Option: Votable> {
     /// Initialize from an uncounted ballot.
     /// All options will be added to the vote count, since no votes are eliminated
     init(fromUncountedBallot ballot: [Vote<Option>]) {
-        
-        self.voteCount = [:]
-        for var vote in ballot.map({ $0.makeIterator() }) {
-            guard let preference = vote.next() else { continue }
-            self.voteCount[preference, default: []].append(vote)
-        }
+        self.voteCount = Dictionary(grouping: ballot) { $0.first }
     }
     
     /// Initialize from a previous round. This will include trying to eliminate options.
@@ -81,10 +76,10 @@ struct VoteCountingRound<Option: Votable> {
     /// Redistributes votes to the next preference that is stil valid, if
     /// that is available. Discards votes that do no longer have valid preferences.
     private mutating func redistribute(votes: Votes) {
-        for var vote in votes {
-            while let nextRankedVote = vote.next() {
+        for vote in votes {
+            for nextRankedOption in vote {
                 // Only add votes to options that are still valid in this round
-                guard voteCount[nextRankedVote]?.append(vote) == nil else { break }
+                guard voteCount[nextRankedOption]?.append(vote) == nil else { break }
             }
         }
     }

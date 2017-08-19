@@ -32,9 +32,10 @@ extension VoteCounter: CustomStringConvertible {
     
     public var description: String {
         
-        var desc = String()
-        
-        desc += ("Number of votes in uncounted ballot: \(voteCountingRounds[0].totalVotes)\n")
+        var desc = """
+            Number of votes in uncounted ballot: \(voteCountingRounds[0].totalVotes)
+            
+            """
         
         for round in voteCountingRounds.indices {
             desc += "\nRound \(round)\n"

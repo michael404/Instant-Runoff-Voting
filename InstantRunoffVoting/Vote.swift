@@ -1,43 +1,33 @@
 public typealias Votable = Equatable & Hashable & CustomStringConvertible
 
-public struct Vote<Option: Votable>: Sequence, CustomStringConvertible {
+public struct Vote<Option: Votable> {
     
-    fileprivate let rankedVotes: [Option]
+    fileprivate let rankedOptions: [Option]
     
-    init(preferences: [Option]) throws {
-        guard !preferences.isEmpty else { throw VoteError.noPreferencesInVote }
-        guard preferences.elementsAreUnique() else { throw VoteError.duplicatePreferencesInVote }
-        self.rankedVotes = preferences
+    init(rankedOptions: [Option]) throws {
+        guard !rankedOptions.isEmpty else { throw VoteError.noOptionsInVote }
+        guard rankedOptions.elementsAreUnique() else { throw VoteError.duplicateOptionsInVote }
+        self.rankedOptions = rankedOptions
     }
     
-    public func makeIterator() -> VoteIterator<Option> {
-        return VoteIterator(self)
-    }
-    
-    public var description: String {
-        return self.rankedVotes.lazy.map({ $0.description }).joined(separator: ">")
+    public var first: Option {
+        return self.rankedOptions[self.rankedOptions.startIndex]
     }
     
 }
 
-public struct VoteIterator<Option: Votable>: IteratorProtocol, CustomStringConvertible {
+extension Vote: Sequence {
     
-    private let vote: Vote<Option>
-    
-    private var index: Int = 0
-    
-    fileprivate init(_ vote: Vote<Option>) { self.vote = vote }
-    
-    /// Advance to the next preference and return it, or nil if no next preference exists
-    mutating public func next() -> Option? {
-        guard self.index < self.vote.rankedVotes.endIndex else { return nil }
-        defer { self.index += 1 }
-        return self.vote.rankedVotes[self.index]
-    }
-    
-    public var description: String {
-        return self.vote.description
+    public func makeIterator() -> Array<Option>.Iterator {
+        return self.rankedOptions.makeIterator()
     }
     
 }
 
+extension Vote: CustomStringConvertible {
+    
+    public var description: String {
+        return self.rankedOptions.lazy.map({ $0.description }).joined(separator: ">")
+    }
+    
+}

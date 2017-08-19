@@ -1,11 +1,10 @@
 public enum VoteError: Error {
-    case noPreferencesInVote
-    case duplicatePreferencesInVote
+    case noOptionsInVote
+    case duplicateOptionsInVote
     case votesAlreadyCounted
     case unresolvableTie
 }
 
-// TODO: Change this to work on all collections
 extension Array where Element: Hashable {
     
     /// Checks if all elements in the sequence are unique

@@ -28,12 +28,12 @@ class InstantRunnoffVotingUnitTests: XCTestCase {
     func testOneRoundVote() {
         var votes: [Vote<TestOptions>] = []
         do {
-            votes.append(try Vote(preferences: [.AltA, .AltB, .AltC]))
-            votes.append(try Vote(preferences: [.AltA, .AltB, .AltC]))
-            votes.append(try Vote(preferences: [.AltA, .AltB, .AltC, .AltD]))
-            votes.append(try Vote(preferences: [.AltA, .AltB, .AltC]))
-            votes.append(try Vote(preferences: [.AltA, .AltC, .AltB]))
-            votes.append(try Vote(preferences: [.AltB, .AltA]))
+            votes.append(try Vote(rankedOptions: [.AltA, .AltB, .AltC]))
+            votes.append(try Vote(rankedOptions: [.AltA, .AltB, .AltC]))
+            votes.append(try Vote(rankedOptions: [.AltA, .AltB, .AltC, .AltD]))
+            votes.append(try Vote(rankedOptions: [.AltA, .AltB, .AltC]))
+            votes.append(try Vote(rankedOptions: [.AltA, .AltC, .AltB]))
+            votes.append(try Vote(rankedOptions: [.AltB, .AltA]))
         } catch {
             XCTFail("Failed to create votes")
         }
@@ -57,14 +57,14 @@ class InstantRunnoffVotingUnitTests: XCTestCase {
         var votes: [Vote<TestOptions>] = []
         
         do {
-            votes.append(try Vote(preferences: [.AltA]))
-            votes.append(try Vote(preferences: [.AltA]))
-            votes.append(try Vote(preferences: [.AltA]))
+            votes.append(try Vote(rankedOptions: [.AltA]))
+            votes.append(try Vote(rankedOptions: [.AltA]))
+            votes.append(try Vote(rankedOptions: [.AltA]))
             
-            votes.append(try Vote(preferences: [.AltB]))
-            votes.append(try Vote(preferences: [.AltB]))
+            votes.append(try Vote(rankedOptions: [.AltB]))
+            votes.append(try Vote(rankedOptions: [.AltB]))
             
-            votes.append(try Vote(preferences: [.AltC]))
+            votes.append(try Vote(rankedOptions: [.AltC]))
         } catch {
             XCTFail("Failed to create votes")
         }
@@ -93,19 +93,19 @@ class InstantRunnoffVotingUnitTests: XCTestCase {
         
         do {
             for _ in 1...7 {
-                votes.append(try Vote(preferences: [.AltA]))
+                votes.append(try Vote(rankedOptions: [.AltA]))
             }
             for _ in 1...6 {
-                votes.append(try Vote(preferences: [.AltB]))
+                votes.append(try Vote(rankedOptions: [.AltB]))
             }
             for _ in 1...5 {
-                votes.append(try Vote(preferences: [.AltC]))
+                votes.append(try Vote(rankedOptions: [.AltC]))
             }
             for _ in 1...4 {
-                votes.append(try Vote(preferences: [.AltD, .AltE]))
+                votes.append(try Vote(rankedOptions: [.AltD, .AltE]))
             }
-            votes.append(try Vote(preferences: [.AltE, .AltF, .AltA]))
-            votes.append(try Vote(preferences: [.AltF, .AltB]))
+            votes.append(try Vote(rankedOptions: [.AltE, .AltF, .AltA]))
+            votes.append(try Vote(rankedOptions: [.AltF, .AltB]))
         } catch {
             XCTFail("Failed to create votes")
         }
@@ -148,12 +148,12 @@ class InstantRunnoffVotingUnitTests: XCTestCase {
         var votes: [Vote<String>] = []
         
         do {
-            votes.append(try Vote(preferences: ["Alt A", "Alt B", "Alt C", "Alt D"]))
-            votes.append(try Vote(preferences: ["Alt A", "Alt B"]))
-            votes.append(try Vote(preferences: ["Alt A", "Alt B"]))
-            votes.append(try Vote(preferences: ["Alt B"]))
-            votes.append(try Vote(preferences: ["Alt B"]))
-            votes.append(try Vote(preferences: ["Alt C", "Alt A"]))
+            votes.append(try Vote(rankedOptions: ["Alt A", "Alt B", "Alt C", "Alt D"]))
+            votes.append(try Vote(rankedOptions: ["Alt A", "Alt B"]))
+            votes.append(try Vote(rankedOptions: ["Alt A", "Alt B"]))
+            votes.append(try Vote(rankedOptions: ["Alt B"]))
+            votes.append(try Vote(rankedOptions: ["Alt B"]))
+            votes.append(try Vote(rankedOptions: ["Alt C", "Alt A"]))
         } catch {
             XCTFail("Failed to create votes")
         }
@@ -181,19 +181,19 @@ class InstantRunnoffVotingUnitTests: XCTestCase {
         var votes: [Vote<TestOptions>] = []
         
         do {
-            votes.append(try Vote(preferences: [.AltA, .AltC]))
-            votes.append(try Vote(preferences: [.AltA]))
-            votes.append(try Vote(preferences: [.AltA]))
-            votes.append(try Vote(preferences: [.AltA]))
-            votes.append(try Vote(preferences: [.AltA, .AltD]))
+            votes.append(try Vote(rankedOptions: [.AltA, .AltC]))
+            votes.append(try Vote(rankedOptions: [.AltA]))
+            votes.append(try Vote(rankedOptions: [.AltA]))
+            votes.append(try Vote(rankedOptions: [.AltA]))
+            votes.append(try Vote(rankedOptions: [.AltA, .AltD]))
             
-            votes.append(try Vote(preferences: [.AltB]))
-            votes.append(try Vote(preferences: [.AltB]))
-            votes.append(try Vote(preferences: [.AltB]))
-            votes.append(try Vote(preferences: [.AltB, .AltC]))
+            votes.append(try Vote(rankedOptions: [.AltB]))
+            votes.append(try Vote(rankedOptions: [.AltB]))
+            votes.append(try Vote(rankedOptions: [.AltB]))
+            votes.append(try Vote(rankedOptions: [.AltB, .AltC]))
             
-            votes.append(try Vote(preferences: [.AltC]))
-            votes.append(try Vote(preferences: [.AltD]))
+            votes.append(try Vote(rankedOptions: [.AltC]))
+            votes.append(try Vote(rankedOptions: [.AltD]))
         } catch {
             XCTFail("Failed to create votes")
         }
@@ -223,21 +223,21 @@ class InstantRunnoffVotingUnitTests: XCTestCase {
         var votes: [Vote<TestOptions>] = []
         
         do {
-            votes.append(try Vote(preferences: [.AltA]))
-            votes.append(try Vote(preferences: [.AltA]))
+            votes.append(try Vote(rankedOptions: [.AltA]))
+            votes.append(try Vote(rankedOptions: [.AltA]))
             
-            votes.append(try Vote(preferences: [.AltB]))
-            votes.append(try Vote(preferences: [.AltB]))
+            votes.append(try Vote(rankedOptions: [.AltB]))
+            votes.append(try Vote(rankedOptions: [.AltB]))
             
-            votes.append(try Vote(preferences: [.AltC]))
-            votes.append(try Vote(preferences: [.AltC]))
+            votes.append(try Vote(rankedOptions: [.AltC]))
+            votes.append(try Vote(rankedOptions: [.AltC]))
             
             for _ in 1...8 {
-                votes.append(try Vote(preferences: [.AltD]))
+                votes.append(try Vote(rankedOptions: [.AltD]))
             }
             
             for _ in 1...7 {
-                votes.append(try Vote(preferences: [.AltE]))
+                votes.append(try Vote(rankedOptions: [.AltE]))
             }
         } catch {
             XCTFail("Failed to create votes")
@@ -270,15 +270,15 @@ class InstantRunnoffVotingUnitTests: XCTestCase {
         var votes: [Vote<TestOptions>] = []
         
         do {
-            votes.append(try Vote(preferences: [.AltA, .AltC]))
-            votes.append(try Vote(preferences: [.AltA]))
-            votes.append(try Vote(preferences: [.AltA]))
-            votes.append(try Vote(preferences: [.AltA, .AltD]))
+            votes.append(try Vote(rankedOptions: [.AltA, .AltC]))
+            votes.append(try Vote(rankedOptions: [.AltA]))
+            votes.append(try Vote(rankedOptions: [.AltA]))
+            votes.append(try Vote(rankedOptions: [.AltA, .AltD]))
             
-            votes.append(try Vote(preferences: [.AltB]))
-            votes.append(try Vote(preferences: [.AltB]))
-            votes.append(try Vote(preferences: [.AltB]))
-            votes.append(try Vote(preferences: [.AltB, .AltC]))
+            votes.append(try Vote(rankedOptions: [.AltB]))
+            votes.append(try Vote(rankedOptions: [.AltB]))
+            votes.append(try Vote(rankedOptions: [.AltB]))
+            votes.append(try Vote(rankedOptions: [.AltB, .AltC]))
         } catch {
             XCTFail("Failed to create votes")
         }
@@ -291,10 +291,10 @@ class InstantRunnoffVotingUnitTests: XCTestCase {
         var votes: [Vote<TestOptions>] = []
         
         do {
-            votes.append(try Vote(preferences: [.AltA, .AltC]))
-            votes.append(try Vote(preferences: [.AltB]))
-            votes.append(try Vote(preferences: [.AltC]))
-            votes.append(try Vote(preferences: [.AltD, .AltB]))
+            votes.append(try Vote(rankedOptions: [.AltA, .AltC]))
+            votes.append(try Vote(rankedOptions: [.AltB]))
+            votes.append(try Vote(rankedOptions: [.AltC]))
+            votes.append(try Vote(rankedOptions: [.AltD, .AltB]))
         } catch {
             XCTFail("Failed to create votes")
         }
@@ -305,13 +305,13 @@ class InstantRunnoffVotingUnitTests: XCTestCase {
     
     func testVoteWithNoOptions() {
         
-        AssertThrowsExpectedError(try Vote(preferences: Array<TestOptions>()), expectedError: VoteError.noPreferencesInVote)
+        AssertThrowsExpectedError(try Vote(rankedOptions: Array<TestOptions>()), expectedError: VoteError.noOptionsInVote)
         
     }
     
     func testVoteRepeatedOptions() {
         
-        AssertThrowsExpectedError(try Vote(preferences: [TestOptions.AltB, .AltB]), expectedError: VoteError.duplicatePreferencesInVote)
+        AssertThrowsExpectedError(try Vote(rankedOptions: [TestOptions.AltB, .AltB]), expectedError: VoteError.duplicateOptionsInVote)
         
     }
     
