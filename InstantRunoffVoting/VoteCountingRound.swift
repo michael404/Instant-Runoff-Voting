@@ -62,7 +62,7 @@ struct VoteCountingRound<Option: Votable> {
 
         // We have found that option, and can therefore return every option
         // that is less popular than this
-        return optionsSortedByVotes.flatMap({ $0.key })
+        return optionsSortedByVotes.map({ $0.key })
     }
     
     /// Removes votes for the options specified from voteCount and returns an
