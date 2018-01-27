@@ -1,4 +1,4 @@
-public typealias Votable = Equatable & Hashable & CustomStringConvertible
+public typealias Votable = Hashable & CustomStringConvertible
 
 public struct Vote<Option: Votable> {
     
