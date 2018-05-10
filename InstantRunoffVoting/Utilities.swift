@@ -5,12 +5,12 @@ public enum VoteError: Error {
     case unresolvableTie
 }
 
-extension Array where Element: Hashable {
+extension Collection where Element: Hashable {
     
-    /// Checks if all elements in the sequence are unique
+    /// Checks if all elements in the collection are unique
     ///
     /// - Returns: `true` if all elements are unique, otherwise `false`
-    func elementsAreUnique() -> Bool {
+    var elementsAreUnique: Bool {
         var set = Set<Element>(minimumCapacity: self.count)
         for element in self {
             guard set.insert(element).inserted else { return false }

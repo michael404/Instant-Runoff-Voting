@@ -6,7 +6,7 @@ public struct Vote<Option: Votable> {
     
     init(rankedOptions: [Option]) throws {
         guard !rankedOptions.isEmpty else { throw VoteError.noOptionsInVote }
-        guard rankedOptions.elementsAreUnique() else { throw VoteError.duplicateOptionsInVote }
+        guard rankedOptions.elementsAreUnique else { throw VoteError.duplicateOptionsInVote }
         self.rankedOptions = rankedOptions
     }
     
