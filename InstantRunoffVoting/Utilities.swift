@@ -43,5 +43,3 @@ extension Sequence where Element: Numeric {
     }
     
 }
-
-
