@@ -27,7 +27,7 @@ extension Vote: Sequence {
 extension Vote: CustomStringConvertible {
     
     public var description: String {
-        return self.rankedOptions.lazy.map({ $0.description }).joined(separator: ">")
+        return self.rankedOptions.map({ $0.description }).joined(separator: ">")
     }
     
 }

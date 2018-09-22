@@ -1,5 +1,8 @@
 import XCTest
 
+@inline(never)
+fileprivate func blackHole<T>(_ value: T) { }
+
 class InstantRunnoffVotingPerformanceTest: XCTestCase {
     
     enum TestOptions: String, Votable {
@@ -37,7 +40,7 @@ class InstantRunnoffVotingPerformanceTest: XCTestCase {
         }
         
         self.measure {
-            withExtendedLifetime(try! VoteCounter(ballot: votes)) { }
+            blackHole(try! VoteCounter(ballot: votes))
         }
     }
     
@@ -56,7 +59,7 @@ class InstantRunnoffVotingPerformanceTest: XCTestCase {
         }
         
         self.measure {
-            withExtendedLifetime(try! VoteCounter(ballot: votes).results) { }
+            blackHole(try! VoteCounter(ballot: votes).results)
         }
     }
     
@@ -89,7 +92,7 @@ class InstantRunnoffVotingPerformanceTest: XCTestCase {
             } catch {
                 XCTFail("Failed to create votes")
             }
-            withExtendedLifetime(votes) { }
+            blackHole(votes)
         }
         
     }
@@ -125,7 +128,7 @@ class InstantRunnoffVotingPerformanceTest: XCTestCase {
         
         self.measure {
             for vote in votes {
-                withExtendedLifetime(vote.description) { }
+                blackHole(vote.description)
             }
         }
     }
