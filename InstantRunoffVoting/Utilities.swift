@@ -27,7 +27,7 @@ extension Sequence {
     ///
     /// - Parameter counting: the closure to use to calculate the value of each element
     /// - Returns: the sum of the sequence
-    func sum<N: Numeric>(countingElementsBy counting: (Element) -> N) -> N {
+    func sum<N: Numeric>(of counting: (Element) -> N) -> N {
         return self.reduce(0 as N) { result, item in
             return result + counting(item)
         }
