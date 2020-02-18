@@ -55,7 +55,7 @@ struct VoteCountingRound<Option: Votable> {
         
         // Continue looping until we find he most popular (last) option that individually has a
         // higher number of votes than all options after it.
-        while optionsSortedByVotes.removeLast().value <= optionsSortedByVotes.sum { $0.value } {
+        while optionsSortedByVotes.removeLast().value <= optionsSortedByVotes.sum(of: { $0.value }) {
             continue
         }
 
