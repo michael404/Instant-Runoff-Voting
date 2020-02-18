@@ -2,7 +2,7 @@ public typealias Votable = Hashable & CustomStringConvertible
 
 public struct Vote<Option: Votable> {
     
-    fileprivate let rankedOptions: [Option]
+    private let rankedOptions: [Option]
     
     init(rankedOptions: [Option]) throws {
         guard !rankedOptions.isEmpty else { throw VoteError.noOptionsInVote }
