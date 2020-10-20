@@ -35,11 +35,11 @@ extension Sequence {
     
 }
 
-extension Sequence where Element: Numeric {
+extension Sequence where Element: AdditiveArithmetic {
     
     /// The sum of the elements in the sequence
     var sum: Element {
-        return self.reduce(0, +)
+        return self.reduce(.zero, +)
     }
     
 }
